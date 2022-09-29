@@ -1,0 +1,325 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/* @font-face {
+  font-family: kalimati;
+  src: url(Kalimati.otf);
+}
+@font-face {
+  font-family: kokila;
+  src: url(kokila.ttf);
+} */
+
+/* Date Icon*/
+
+/* auth: Younz  */
+/* Letter wrap  */
+.letter_wrap {
+  width: 100%;
+  height: 100%;
+  font-family: kokila;
+  font-size: 1.1rem;
+  line-height: 1.7rem;
+}
+.my-date{
+    position:relative;
+    padding-right:40px;
+    z-index:-1;
+}
+.my-date:before{
+    content:'Hello';
+    width:40px;
+    height:40px;
+    background:red;
+    right:0;
+    top:0;
+    display:block;
+    z-index:3;
+}
+
+.letter_wrap p {
+  margin-bottom: 2px;
+  line-height: 1.7rem;
+}
+.letter_wrap .letter_inner {
+  border: 1px solid #eee;
+  margin: 10px;
+  padding: 10px;
+  height: 100%;
+  position: relative;
+}
+/* Print Button */
+.letter_wrap .letter_inner #print_btn {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  padding: 4px 14px;
+  font-size: 1rem;
+  border: 1px solid #dfdfdf;
+  color: #777;
+  cursor: pointer;
+  z-index: 999;
+  text-decoration: none;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+}
+.letter_wrap .letter_inner #print_btn span{
+  margin-left: 8px;
+}
+.letter_wrap .letter_inner .letter_header {
+  position: relative;
+}
+.letter_wrap .letter_inner .letter_header img.letter_logo {
+  width: 110px;
+}
+.letter_wrap .letter_inner .letter_header .letter_number_detail {
+  margin-top: 15px;
+  line-height: 1.8rem;
+}
+.letter_wrap .letter_inner .letter_header .letter_title {
+  position: absolute;
+  top: 0;
+  text-align: center;
+  left: 50%;
+  line-height: 2rem;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+}
+.letter_wrap .letter_inner .letter_header .letter_title h1,
+.letter_wrap .letter_inner .letter_header .letter_title h2,
+.letter_wrap .letter_inner .letter_header .letter_title h3 {
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+  line-height: 1.1;
+}
+.letter_wrap .letter_inner .letter_header .letter_title h1 {
+  font-size: 1.6rem;
+}
+.letter_wrap .letter_inner .letter_header .letter_title h2 {
+  font-size: 2rem;
+}
+.letter_wrap .letter_inner .letter_header .letter_title h3 {
+  font-size: 1.2rem;
+}
+.letter_wrap .letter_inner .letter_header .letter_title .letter_type {
+  margin-top: 30px;
+  font-weight: 500;
+  text-decoration: underline;
+}
+.letter_wrap .letter_inner .letter_header .letter_date {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  top: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.letter_wrap .letter_inner .letter_header .letter_date span{
+  display: block;
+  padding-right: 5px;
+  position:relative;
+}
+/*.letter_wrap .letter_inner .letter_header .letter_date span::after{*/
+/*    position:absolute;*/
+/*    content:'';*/
+/*    width:60px;*/
+/*    height:60px;*/
+/*    background:red;*/
+/*    top:9px;*/
+/*    right:0px;*/
+/*}*/
+.letter_wrap .letter_inner .letter_header .letter_date input[type="date"] {
+  border: 1px solid #eee;
+  padding: 4px;
+  outline: none;
+}
+.letter_wrap .letter_inner .letter_subject {
+  position: relative;
+  font-weight: 600;
+  left: 50%;
+  top: 0;
+  margin-top: 55px;
+  display: inline-block;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+}
+.letter_wrap .letter_inner .letter_body {
+  margin-top: 20px;
+}
+.letter_wrap .letter_inner .letter_body .letter_greeting {
+  margin-bottom: 2px;
+}
+.letter_wrap .letter_inner .letter_body p.letter_text {
+  text-indent: 2.8rem;
+  text-align: justify;
+}
+/* Table  */
+.letter_wrap .letter_inner .letter_body .letter_table {
+  width: 100%;
+  margin: 0px;
+  border-collapse: collapse;
+  margin-bottom: 5px;
+}
+.letter_wrap .letter_inner .letter_body .letter_table th,
+ .letter_wrap .letter_inner .letter_body .letter_table td{
+   border-collapse: collapse;
+  
+}
+   .letter_wrap .letter_inner .letter_body table
+ .letter_wrap .letter_inner .letter_body table
+  .letter_wrap .letter_inner .letter_body .table
+ .letter_wrap .letter_inner .letter_body .table{
+     
+ }
+ .letter_wrap .letter_inner .letter_body table th,
+ .letter_wrap .letter_inner .letter_body table td,
+  .letter_wrap .letter_inner .letter_body .table th,
+ .letter_wrap .letter_inner .letter_body .table td
+ {
+  border: 1px solid #838383 !important;
+  
+}
+
+
+ .letter_wrap .letter_inner .letter_body table.t_half:nth-child(1) tr td {
+   width:50% !important;  
+   text-align:right;
+ }
+
+ .letter_wrap .letter_inner .letter_body  td,
+ .letter_wrap .letter_inner .letter_body table th{
+     border:1px solid #000;
+     padding:.2rem;
+
+ }
+ .half_left tr td:nth-child(1) {
+    text-align:right; width:50%;}
+
+
+.letter_wrap .letter_inner .letter_body .letter_table tr td + td {
+  font-weight: 600;
+  padding:.2rem;
+}
+
+/* Letter Fotter  */
+.letter_footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+.letter_footer .letter_sign {
+  padding: 10px;
+  min-width: 260px;
+  text-align: center;
+}
+.letter_footer .letter_sign .sign_title {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.letter_footer .letter_sign select {
+  width: 100%;
+  padding: 1px 10px;
+  border: 1px solid #a2a1a1;
+  border-radius: 0px !important;
+  text-align: center;
+  box-sizing: border-box;
+  border-radius: 0;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
+  outline-offset: -1px;
+  font-size: 1.1rem;
+}
+
+/* For default browser setting */
+select:not([multiple]) {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 0.5em;
+  padding-right: 1.5em;
+}
+
+.letter_footer .letter_sign select:focus {
+  border: 1px solid #838383;
+  outline: none;
+}
+
+.letter_footer .letter_sign .post {
+  font-size: 1.1rem;
+}
+
+/* Print Letter */
+#print_letter .letter_inner {
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1.6rem;
+  margin: 0px;
+  padding: 0px;
+  padding-left: 30px;
+}
+
+#print_letter .letter_date{
+  top: 0;
+}
+#print_letter .letter_number_detail{
+  margin-top: 0px;
+  line-height: 1.5rem;
+}
+#print_letter .letter_type{
+  margin-top: 15px;
+}
+#print_letter .letter_subject{
+  margin-top: 5px;
+}
+#print_letter .letter_body{
+  margin-top: 10px;
+}
+#print_letter .letter_body p{
+  line-height: 1.4rem;
+}
+#print_letter table td{
+  padding: 0px !important;
+}
+#print_letter table.letter_table td {
+  padding: 0.1em !important;
+  /* border: none !important; */
+}
+
+#print_letter table.letter_table thead tr th,
+#print_letter table.letter_table tbody tr td{
+  padding: 0.1em !important;
+  /* border: none !important; */
+}
+
+#print_letter table.letter_table tr td + td {
+  font-weight: 400;
+}
+#print_letter .letter_footer .letter_sign {
+  width: auto;
+  min-width: auto;
+}
+#print_letter .letter_footer .letter_sign .sign_title {
+  line-height: 1.4;
+  border-top: 1px dashed #777;
+  padding-top: 5px;
+}
+
+#print_letter .letter_footer .letter_sign .sign_name,
+#print_letter .letter_footer .letter_sign .post {
+  margin: 0px;
+  padding: 0px;
+  line-height: 1.3rem;
+}

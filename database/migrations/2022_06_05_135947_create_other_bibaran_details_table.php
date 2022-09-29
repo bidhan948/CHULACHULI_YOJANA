@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateOtherBibaranDetailsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('other_bibaran_details', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedInteger('other_bibaran');
+            $table->string('date',100);
+            $table->string('date_eng',100)->nullable();
+            $table->unsignedInteger('staff_id');
+            $table->unsignedInteger('post_id');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('other_bibaran_details');
+    }
+}

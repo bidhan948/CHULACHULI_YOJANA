@@ -1,0 +1,67 @@
+
+/*=== Login CSS ===*/
+.login-card{
+    min-width: 28%;
+    width: 26%;
+    transform: translateX(-50%);
+    position: relative;
+    left: 50%;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    -o-border-radius: 6px;
+    border:none;
+}
+.login-card .card-header{
+    background: #2e60b7;
+    color: #fff;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+.login-card .btn-primary{
+    background: #d50023;
+    border:1px solid #d50023;
+}
+.login-card label{
+    font-weight:500;
+    padding-bottom:0px;
+    color:#777;
+}
+.login-card input:focus {
+    border-color: #2e60b7;
+     outline: none; 
+     box-shadow: none; 
+}
+.login-title{
+    text-align:center;
+    margin-top:15px;
+}
+ .login-title h3{
+    font-size:1.1rem;
+}
+ .login-title h3,
+  .login-title h4,
+   .login-title p{
+       font-weight:600;
+   }
+.table-bordered{
+    border:1px solid #000;
+}
+
+/*=== Main Menu ===*/
+.main-header > ul.main_menu > li > .nav-link {
+    background: red !important;
+}
+.main-header .navbar-nav .nav-item .nav-link{
+    margin: 0;
+    background: rebeccapurple;
+}
+
+
+/* Samll Device ==*/
+@media only screen and (max-width: 600px){
+    .login-card{
+        width:100%;
+    }
+}

@@ -1,0 +1,147 @@
+@section('title', 'योजना / कार्यक्रम ')
+@section('plan', 'active')
+@extends('layout.layout')
+@section('sidebar')
+    @include('layout.yojana_sidebar')
+@endsection
+
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('date-picker/css/nepali.datepicker.v3.7.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+@endsection
+
+@section('content')
+    <div class="container-fluid">
+        <div class="card ">
+            <div class="card-header">
+                <h3 class="card-title">{{ __('योजनाको विवरण हेर्नुहोस्') }}</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <table id="table1" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">{{ __('सि नं') }}</th>
+                                    <th class="text-center">{{ __('दर्ता नं') }}</th>
+                                    <th class="text-center">{{ __('योजना / कार्यक्रमको नाम') }}</th>
+                                    <th class="text-center">{{ __('बजेट शिर्षक') }}</th>
+                                    <th class="text-center">{{ __('विनियोजन किसिम') }}</th>
+                                    <th class="text-center">{{ __('वडा नं') }}</th>
+                                    <th class="text-center">{{ __('अनुदान रकम (रु.)') }}</th>
+                                    <th class="text-center">{{ __('विवरण हेर्नुहोस') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($plans as $key => $plan)
+                                    <tr>
+                                        <td class="text-center">{{ Nepali($key + 1) }}</td>
+                                        <td class="text-center">{{ Nepali($plan->reg_no) }}</td>
+                                        <td class="text-center">{{ $plan->name }}</td>
+                                        <td class="text-center">
+                                            @foreach ($plan->budgetSourcePlanDetails as $budgetDetail)
+                                                @php
+                                                    $sirsak = 0;
+                                                @endphp
+                                                @foreach ($plan->Parents as $child)
+                                                    @foreach ($child->budgetSourcePlanDetails as $item)
+                                                        @if ($item->budget_source_id == $budgetDetail->budget_source_id)
+                                                            @php
+                                                                $sirsak += $item->amount;
+                                                            @endphp
+                                                        @endif
+                                                    @endforeach
+                                                @endforeach
+                                                {{ $budgetDetail->budgetSources->name . ' :' . NepaliAmount($budgetDetail->amount - $sirsak ?? 0) }}
+                                                <br>
+                                            @endforeach
+                                        </td>
+                                        <td class="text-center">
+                                            {{ getSettingValueById($plan->type_of_allocation_id)->name }}</td>
+                                        <td class="text-center">{{ Nepali($plan->ward_no) }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ NepaliAmount($plan->grant_amount - $plan->parents->sum('grant_amount')) }}
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#"
+                                                class="btn btn-primary btn-sm">{{ __('पुरा विवरण हेर्नुहोस्') }}</a>
+                                            @if (!$plan->is_merge)
+                                                <a href="{{ route('plan.edit', $plan) }}"
+                                                    class="btn btn-primary btn-sm btn-success">{{ __('सच्याउनुहोस') }}</a>
+                                                @if (!$plan->mergePlan->count())
+                                                    @if (config('YOJANA.PLAN') == $plan->type_id)
+                                                        <a href="{{ route('plan.break', $plan->id) }}"
+                                                            class="btn btn-danger btn-sm my-1">{{ __('टुक्राउनुहोस्') }}</a>
+                                                    @endif
+                                                @endif
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    {{-- this is for tukarune yojana --}}
+                                    @foreach ($plan->parents as $keyChild => $parent)
+                                        <tr>
+                                            <td class="text-center">
+                                                {{ Nepali($key + 1) . '.' . Nepali($keyChild + 1) }}
+                                            </td>
+                                            <td class="text-center">{{ Nepali($parent->reg_no) }}</td>
+                                            <td class="text-center">{{ $parent->name }}</td>
+                                            <td class="text-center">
+                                                @foreach ($parent->budgetSourcePlanDetails as $budgetDetail)
+                                                    {{ $budgetDetail->budgetSources->name . ' :' . NepaliAmount($budgetDetail->amount) }}
+                                                    <br>
+                                                @endforeach
+                                            </td>
+                                            <td class="text-center">
+                                                {{ getSettingValueById($parent->type_of_allocation_id)->name }}</td>
+                                            <td class="text-center">
+                                                {{ Nepali($plan->ward_no) }}
+                                            </td>
+                                            <td class="text-center">{{ NepaliAmount($parent->grant_amount) }}</td>
+                                            <td class="text-center">
+                                                <a href="#"
+                                                    class="btn btn-primary btn-sm">{{ __('पुरा विवरण हेर्नुहोस्') }}</a>
+                                                <a href="#"
+                                                    class="btn btn-primary btn-sm">{{ __('सच्याउनुहोस') }}</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+    </div>
+    <!-- /.container-fluid -->
+@endsection
+@section('scripts')
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+    <script>
+        $(function() {
+            $('#table1').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+            $('#table1_wrapper').css("width", "100%");
+        });
+    </script>
+@endsection

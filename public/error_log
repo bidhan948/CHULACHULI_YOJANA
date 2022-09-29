@@ -1,0 +1,2 @@
+[08-Sep-2022 11:42:04 Asia/Kathmandu] PHP Fatal error:  Cannot use App\Models\SharedModel\plan as plan because the name is already in use in /home2/ourpalika/khandbari.ourpalika.com/app/Http/Controllers/YojanaControllers/LetterController.php on line 15
+[08-Sep-2022 11:42:16 Asia/Kathmandu] PHP Fatal error:  Cannot use App\Models\SharedModel\bank as bank because the name is already in use in /home2/ourpalika/khandbari.ourpalika.com/app/Http/Controllers/YojanaControllers/LetterController.php on line 15
