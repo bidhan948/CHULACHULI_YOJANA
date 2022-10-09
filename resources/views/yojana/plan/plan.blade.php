@@ -281,7 +281,7 @@
                             console.log(response);
                             vm.plans = response.data.plan;
                             vm.pages = response.data.plan.links;
-                            vm.last_page = response.data.plan.last_page
+                            vm.last_page = response.data.plan.last_page;
                             vm.current_page = response.data.plan.current_page;
                             vm.per_page = response.data.plan.per_page;
                             vm.total_budget = response.data.sum;

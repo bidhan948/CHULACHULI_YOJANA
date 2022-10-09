@@ -264,19 +264,43 @@
                                             @foreach ($anugaman_plan->anugamanSamiti->anugamanSamitiDetails as $key => $anugamanSamitiDetail)
                                                 <tr class="{{$anugamanSamitiDetail->anugamanSamiti->is_useable ? 'dummy' : ''}}">
                                                     <td class="text-center">
-                                                        <input type="text" class="form-control form-control-sm"  value="{{getSettingValueById($anugamanSamitiDetail->post_id)->name}}" disabled>
+                                                        @if (!$anugaman_plan->anugamanSamiti->is_useable)
+                                                            <select name="post_id[]" class="form-control form-control-sm" required>
+                                                                @foreach ($posts->settingValues as $post_key => $post)
+                                                                    <option value="{{$post->id}}" {{$anugamanSamitiDetail->post_id == $post->id ? 'selected' : ''}} >{{$post->name}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        @else
+                                                            <input type="text" class="form-control form-control-sm"  value="{{getSettingValueById($anugamanSamitiDetail->post_id)->name}}" {{!$anugaman_plan->anugamanSamiti->is_useable ? '' : 'disabled'}}>
+                                                        @endif
                                                     </td>
                                                     <td class="text-center">
-                                                        <input type="text" class="form-control form-control-sm"  value="{{$anugamanSamitiDetail->name}}" disabled>
+                                                        <input type="text" class="form-control form-control-sm"  name="samiti_name[]" value="{{$anugamanSamitiDetail->name}}" {{!$anugaman_plan->anugamanSamiti->is_useable ? '' : 'disabled'}}>
                                                     </td>
                                                     <td class="text-center">
-                                                        <input type="text" class="form-control form-control-sm"  value="{{Nepali($anugamanSamitiDetail->ward_no)}}" disabled>
+                                                        @if (!$anugaman_plan->anugamanSamiti->is_useable)
+                                                            <select name="ward_no[]" class="form-control form-control-sm" required>
+                                                               @for ($i = 0; $i <= config('constant.TOTAL_WARDS'); $i++)
+                                                                   <option value="{{$i}}"{{$i == $anugamanSamitiDetail->ward_no ? 'selected' : ''}}>{{Nepali($i ? 'वडा नं '. $i :config('constant.SITE_TYPE'))}}</option>
+                                                               @endfor
+                                                            </select>
+                                                        @else
+                                                            <input type="text" class="form-control form-control-sm"  value="{{Nepali($anugamanSamitiDetail->ward_no)}}" {{!$anugaman_plan->anugamanSamiti->is_useable ? '' : 'disabled'}}>
+                                                        @endif
                                                     </td>
                                                     <td class="text-center">
-                                                        <input type="text" class="form-control form-control-sm"  value="{{returnGender($anugamanSamitiDetail->gender)}}" disabled>
+                                                        @if (!$anugaman_plan->anugamanSamiti->is_useable)
+                                                            <select name="gender[]" class="form-control form-control-sm" required>
+                                                                @foreach (config('constant.GENDER') as $gender_key => $gender)
+                                                                    <option value="{{$gender_key}}" {{$anugamanSamitiDetail->gender == $gender_key ? 'selected' : ''}}>{{$gender}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        @else
+                                                            <input type="text" class="form-control form-control-sm"  value="{{returnGender($anugamanSamitiDetail->gender)}}" disabled>
+                                                        @endif
                                                     </td>
                                                     <td class="text-center">
-                                                        <input type="text" class="form-control form-control-sm"  value="{{Nepali($anugamanSamitiDetail->mobile_no)}}" disabled>
+                                                            <input type="text" name="mobile_no[]" class="form-control form-control-sm"  value="{{$anugamanSamitiDetail->mobile_no}}" {{!$anugaman_plan->anugamanSamiti->is_useable ? '' : 'disabled'}}>
                                                     </td>
                                                 </tr>
                                             @endforeach

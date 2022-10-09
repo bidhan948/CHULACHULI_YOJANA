@@ -113,11 +113,11 @@ class AnugamanSamitiController extends Controller
             if (config('TYPE.AMANAT_MARFAT') != session('type_id')) {
                 $relationName = $helper->getRelationNameViaSession(session('type_id'));
                 $typeDetails = $type->typeable_type::query()
-                            ->where('id',$type->typeable_id)
-                            ->with($relationName,function($q){
-                                $q->orderBy('id');
-                            })
-                            ->first();
+                    ->where('id', $type->typeable_id)
+                    ->with($relationName, function ($q) {
+                        $q->orderBy('id');
+                    })
+                    ->first();
             }
             return view('yojana.anugaman-samiti.' . $view, [
                 'plan' => $plan,
@@ -130,7 +130,7 @@ class AnugamanSamitiController extends Controller
                     ->where('is_useable', 1)
                     ->get(),
                 'anugaman_plan' => $anugaman_plan,
-                'posts' => $helper->getPostViasSession(session('type_id'))
+                'posts' => $helper->getPostViasSession(session('type_id')),
             ]);
         }
     }
@@ -198,12 +198,19 @@ class AnugamanSamitiController extends Controller
     public function updateAnugmanBibaran(Request $request, anugaman_samiti $anugaman_samiti): RedirectResponse
     {
         $plan = plan::query()
-        ->where('id',$request->plan_id)
-        ->first();
-
+            ->where('id', $request->plan_id)
+            ->first();
         DB::transaction(function () use ($request, $anugaman_samiti) {
             if ($request->anugaman_samiti_id == '') {
                 $anugaman_samiti->update(['name' => $request->name]);
+                anugaman_samiti_detail::query()
+                    ->where('anugaman_samiti_id', $anugaman_samiti->id)
+                    ->delete();
+
+                anugaman_detail_plan::query()
+                    ->where('plan_id', $request->plan_id)
+                    ->delete();
+
                 if ($request->has('post_id')) {
                     foreach ($request->post_id as $key => $post_id) {
                         $anugaman_samiti_detail = anugaman_samiti_detail::create(
