@@ -301,6 +301,8 @@ Route::group(['middleware' => 'auth'], function () {
             //Thekka marfat
             Route::get('/thekka-suchana-detail/{reg_no}', [ThekkaController::class,'thekkaSuchanaDetail'])->name('thekka-suchana-detail');
             Route::post('/thekka-suchana-detail-submit', [ThekkaController::class,'thekkaSuchanaDetailSubmit'])->name('thekka-suchana-detail-submit');
+            
+            Route::post('/thekka-suchana-detail-submit', [ThekkaController::class,'thekkaSuchanaDetailSubmit'])->name('thekka-suchana-detail-submit');
         });
     });
 });

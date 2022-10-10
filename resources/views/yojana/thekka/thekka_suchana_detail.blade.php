@@ -21,9 +21,10 @@
             </div>
 
 
-            <form action="">
-
-            <div class="card-body">
+            <form action="{{route('thekka-suchana-detail-submit')}}" method="POST">
+                @csrf
+                <input type="hidden" name="plan_id" value={{$plan->id}}>
+                <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="input-group mb-3">
@@ -31,6 +32,26 @@
                                 <span class="input-group-text">ठेक्का किसिम :
                                     <span id="budget_source_id_group" class="text-danger font-weight-bold px-1">*</span></span>
                             </div>  
+
+                            @if ($contract!=null)
+                                <div class="form-check ml-4">
+                                    <input class="form-check-input" type="radio" name="has_deadline"
+                                        id="has_deadline" value="1" {{$contract->has_deadline? 'checked' : ''}}>
+                                    <label class="form-check-label" for="has_deadline">
+                                        भ्याट सहित
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="has_deadline"
+                                            id="no_deadline" value="0" {{!$contract->has_deadline ? 'checked' : ''}}>
+                                        <label class="form-check-label" for="no_deadline">
+                                            भ्याट बाहेक
+                                        </label>
+                                    </div>
+                                </div>
+                            @else
+
                             <div class="form-check ml-4">
                                 <input class="form-check-input" type="radio" name="has_deadline"
                                     id="has_deadline" value="1">
@@ -47,6 +68,8 @@
                                     </label>
                                 </div>
                             </div>
+                            @endif
+
                         </div>
                         @error('has_deadline')
                             <strong style="color: red">{{ $message }}</strong>
@@ -59,7 +82,7 @@
                                 <span class="input-group-text">ठेक्का रकम:
                                     <span id="budget_source_id_group" class="text-danger font-weight-bold px-1">*</span></span>
                             </div>
-                            <input name="thekka_amount" type="number" class="form-control form-control-sm"></textarea>
+                            <input name="thekka_amount" value="{{isset($contract->thekka_amount) ? $contract->thekka_amount : ''}}" type="number" class="form-control form-control-sm"></textarea>
                         </div>
                     </div>
 
@@ -69,7 +92,7 @@
                                 <span class="input-group-text">प्रकासित मिति:
                                     <span id="budget_source_id_group" class="text-danger font-weight-bold px-1">*</span></span>
                             </div>
-                            <input name="prakashit_date" type="text" class="form-control form-control-sm date"></textarea>
+                            <input name="prakashit_date" value="{{isset($contract->prakashit_date) ? $contract->prakashit_date : ''}}" type="text" class="form-control form-control-sm date"></textarea>
                         </div>
                     </div>
 
@@ -82,7 +105,7 @@
                                 <span class="input-group-text">कुल ठेक्का रकम:
                                     <span id="budget_source_id_group" class="text-danger font-weight-bold px-1">*</span></span>
                             </div>
-                            <input name="total_thekka_amount" type="number" class="form-control form-control-sm"></textarea>
+                            <input name="total_thekka_amount" value="{{isset($contract->total_thekka_amount) ? $contract->total_thekka_amount : ''}}" type="number" class="form-control form-control-sm"></textarea>
                         </div>
                     </div>
 
@@ -92,7 +115,7 @@
                                 <span class="input-group-text">बोलपत्र दाखिला गर्नु पर्ने अन्तिम मिति:
                                     <span id="budget_source_id_group" class="text-danger font-weight-bold px-1">*</span></span>
                             </div>
-                            <input name="dakhila_date" type="text" class="form-control form-control-sm date"></textarea>
+                            <input name="dakhila_date" value="{{isset($contract->dakhila_date) ? $contract->dakhila_date : ''}}" type="text" class="form-control form-control-sm date"></textarea>
                         </div>
                     </div>
 
@@ -105,18 +128,19 @@
                                 <span class="input-group-text">कैफियत:
                                     <span id="budget_source_id_group" class="text-danger font-weight-bold px-1">*</span></span>
                             </div>
-                            <textarea name="remarks" type="text" class="form-control form-control-sm"></textarea>
+                            <textarea name="remarks" value="" type="text" class="form-control form-control-sm">{{isset($contract->remarks) ? $contract->remarks : ''}}</textarea>
                         </div>
                     </div>
                 </div>
 
             </div>
-        </form>
 
 
             <div class="card-footer">
-
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
+        </form>
+
         </div>
     </div>
 @endsection

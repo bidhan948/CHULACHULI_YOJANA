@@ -147,6 +147,11 @@ class plan extends Model
     {
         return $this->hasMany(running_bill_payment::class);
     }
+
+    public function contracts() : HasOne
+    {
+        return $this->hasOne(contract::class);
+    }
     // / over riding orm to insert user id by default
     protected static function booted()
     {
