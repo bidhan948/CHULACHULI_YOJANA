@@ -24,6 +24,23 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="row">
+
+                    @if(config('TYPE.' . session('type_id')) == 'ठेक्का')
+                    <div class="col-3">
+                        <ul class="users-list clearfix">
+                            <li class="card shadow-lg" style="width:100%;">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{ asset('yojana/upabhokta-icon.png') }}" alt="User Image" class="img-fluid"
+                                        width="50">
+                                </div>
+                                <a class="users-list-name mt-3 font-weight-bold"
+                                    href="{{ route('thekka-suchana-detail', $reg_no) }}">{{ __('ठेक्का सुचना विवरण') }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    @endif
+
+
                     <div class="col-3">
                         <ul class="users-list clearfix">
                             <li class="card shadow-lg" style="width:100%;">

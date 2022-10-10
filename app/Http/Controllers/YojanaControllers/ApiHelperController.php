@@ -228,12 +228,18 @@ class ApiHelperController extends Controller
                     'list_registration_attribute' => $list_registration_attribute
                 ])->render();
                 break;
+            case config('YOJANA.LIST_REGISTRATION.NIRMAN_BEBASAYA'):
+                $html = view('yojana.setting.list_registration_include.nirman_bebasaya', [
+                    'list_registration_attribute' => $list_registration_attribute
+                ])->render();
+                break;
             default:
                 $html = "";
                 break;
         }
         return response()->json($html);
     }
+
 
     public function getSuchiDartaBibaran()
     {
@@ -384,11 +390,9 @@ class ApiHelperController extends Controller
 
     public function getYojanaReport(Request $request, YojanaHelper $helper)
     {
-          
         $value = explode('-',$request->yojana_amount_type);
-        
           $plan = plan::query()
-                ->with('Consumer','kulLagat','type.typeable','otherBibaran','planWards','Advance','runningBillPayment.runningBillPaymentDetails')
+                ->with('Consumer','kulLagat','type.typeable','otherBibaran','planWards','Advance','runningBillPayment.runningBillPaymentDetails','finalPayment.finalPaymentDeatils.Deduction')
                 ->when($request->yojana_amount_type!='', function($q)use($value){
                     if (empty($value[0])) {
                         $q->where('grant_amount','<=',$value[1]);
@@ -416,8 +420,12 @@ class ApiHelperController extends Controller
                     elseif ($request->yojana_running_type==3) {
                         $q->whereHas('runningBillPayment');
                     }
+                    elseif($request->yojana_running_type==4)
+                    {
+                        $q->whereHas('finalPayment');
+                    }
                 })
-            ->get();
+            ->paginate(25);
             return response()->json([
                 'plan' => $plan,
             ]);

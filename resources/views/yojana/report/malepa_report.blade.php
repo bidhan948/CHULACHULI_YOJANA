@@ -53,53 +53,65 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($reports as $key => $value)
-                        <tr>
-                        <td class="text-center font-weight-bold">{{Nepali($key+1)}}</td>
-                            <td class="text-center font-weight-bold">{{Nepali($value->reg_no)}}</td>
-                            <td class="text-center font-weight-bold">{{$value->name}}</td>
-                            <td class="text-center font-weight-bold">
-                                @foreach($value->Consumer->consumerDetails as $data)
-                                    @if($data->posts->name == "अध्यक्ष")
-                                        {{$data->name}}
-                                    @endif
-                                @endforeach
-                            </td>
-                            <td class="text-center font-weight-bold">
-                                    <p>उपक्षेत्र: {{isset($value->subRegion->name) ? $value->subRegion->name : ''}}</p>
-                            </td>   
-                            <td class="text-center font-weight-bold">{{ NepaliAmount($value->kulLagat->total_investment) }}</td>
-                            <td class="text-center font-weight-bold">{{ Nepali($value->otherBibaran->agreement_date_nep)}} </td>
-                            <td class="text-center font-weight-bold">
-                                @php
-                                    $count = count($value->addDeadlines);
-                                @endphp
-
-                                @if($count>=1)
-                                    @php
-                                        $length = count($value->addDeadlines);
-                                    @endphp
-                                    @foreach ($value->addDeadlines as $key => $item)
-                                        @if($key+1==$length)
-                                                {{ Nepali($item->period_add_date_nep)}}
+                        @foreach ($reports as $key => $value)
+                            <tr>
+                                <td class="text-center font-weight-bold">{{ Nepali($key + 1) }}</td>
+                                <td class="text-center font-weight-bold">{{ Nepali($value->reg_no) }}</td>
+                                <td class="text-center font-weight-bold">{{ $value->name }}</td>
+                                <td class="text-center font-weight-bold">
+                                    @foreach ($value->Consumer->consumerDetails as $data)
+                                        @if ($data->posts->name == 'अध्यक्ष')
+                                            {{ $data->name }}
                                         @endif
                                     @endforeach
-                                @else
-                                    {{Nepali($value->otherBibaran->end_date)}}
-                                @endif
-                            </td>
-                            <td class="text-center font-weight-bold">{{ NepaliAmount($value->kulLagat->total_investment)}}</td>
-                            <td class="text-center font-weight-bold">{{ NepaliAmount($value->kulLagat->work_order_budget)}}</td>
-                            <td class="text-center font-weight-bold">{{ NepaliAmount($value->kulLagat->consumer_budget)}}</td>
-                            <td class="text-center font-weight-bold">{{ Nepali(isset($value->finalPayment->plan_end_date) ? $value->finalPayment->plan_end_date : '')}}</td>
-                            <td class="text-center font-weight-bold">{{ Nepali(isset($value->finalPayment->final_payable_amount) ? $value->finalPayment->final_payable_amount : '') }}</td>
-                            <td class="text-center font-weight-bold"></td>
-                            <td class="text-center font-weight-bold">{{ Nepali(isset($value->kulLagat->consumer_budget)) }}</td>
-                        </tr>
+                                </td>
+                                <td class="text-center font-weight-bold">
+                                    <p>उपक्षेत्र: {{ isset($value->subRegion->name) ? $value->subRegion->name : '' }}</p>
+                                </td>
+                                <td class="text-center font-weight-bold">
+                                    {{ NepaliAmount($value->kulLagat->total_investment) }}</td>
+                                <td class="text-center font-weight-bold">
+                                    {{ Nepali($value->otherBibaran->agreement_date_nep) }} </td>
+                                <td class="text-center font-weight-bold">
+                                    @php
+                                        $count = count($value->addDeadlines);
+                                    @endphp
+
+                                    @if ($count >= 1)
+                                        @php
+                                            $length = count($value->addDeadlines);
+                                        @endphp
+                                        @foreach ($value->addDeadlines as $key => $item)
+                                            @if ($key + 1 == $length)
+                                                {{ Nepali($item->period_add_date_nep) }}
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        {{ Nepali($value->otherBibaran->end_date) }}
+                                    @endif
+                                </td>
+                                <td class="text-center font-weight-bold">
+                                    {{ NepaliAmount($value->kulLagat->total_investment) }}</td>
+                                <td class="text-center font-weight-bold">
+                                    {{ NepaliAmount($value->kulLagat->work_order_budget) }}</td>
+                                <td class="text-center font-weight-bold">
+                                    {{ NepaliAmount($value->kulLagat->consumer_budget) }}</td>
+                                <td class="text-center font-weight-bold">
+                                    {{ Nepali(isset($value->finalPayment->plan_end_date) ? $value->finalPayment->plan_end_date : '') }}
+                                </td>
+                                <td class="text-center font-weight-bold">
+                                    {{ Nepali(isset($value->finalPayment->final_payable_amount) ? $value->finalPayment->final_payable_amount : '') }}
+                                </td>
+                                <td class="text-center font-weight-bold"></td>
+                                <td class="text-center font-weight-bold">
+                                    {{ Nepali(isset($value->kulLagat->consumer_budget)) }}</td>
+                            </tr>
                         @endforeach
                     </tbody>
-                   
+
                 </table>
+
+                {{$reports->links()}}
             </div>
         </div>
         <!-- /.card-body -->
@@ -112,5 +124,5 @@
 
 
 @section('scripts')
-   
+
 @endsection

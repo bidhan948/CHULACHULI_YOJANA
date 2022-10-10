@@ -67,6 +67,7 @@ class SamitiGathanController extends Controller
                     }
                     $ward_no = auth()->user()->ward_no;
                     session(['type_id' => $request->type_id]);
+
                     if(!$ward_no){
                         return view('yojana.search_plan.dashboard', [
                             'reg_no' => English($request->reg_no),

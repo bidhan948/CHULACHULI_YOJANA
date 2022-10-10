@@ -23,6 +23,8 @@ class list_registration_attribute extends Model
         'cit_no',
         'ward_no',
         'entered_by',
+        'second_person_name',
+        'remark'
     ];
 
     public function listRegistration(): BelongsTo

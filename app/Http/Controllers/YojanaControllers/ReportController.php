@@ -8,6 +8,7 @@ use App\Models\SharedModel\FiscalYear;
 use App\Models\YojanaModel\consumer;
 use App\Models\YojanaModel\plan;
 use App\Models\YojanaModel\setting\amanat;
+use App\Models\YojanaModel\setting\deduction;
 use App\Models\YojanaModel\setting\institutional_committee;
 use App\Models\YojanaModel\setting\tole_bikas_samiti;
 use Illuminate\Contracts\View\View;
@@ -135,7 +136,6 @@ class ReportController extends Controller
 
     public function malepaReport()
     {
-        
         $fiscal_year_id = getCurrentFiscalYear(true)->id;
 
         // dd(plan::query()
@@ -149,8 +149,6 @@ class ReportController extends Controller
         // ->where('fiscal_year_id', $fiscal_year_id)
         // ->first()->kulLagat);
         
-        
-    
         return view(
             'yojana.report.malepa_report',
             [
@@ -162,7 +160,7 @@ class ReportController extends Controller
                     })
                     ->with('kulLagat', 'finalPayment', 'Consumer.consumerDetails.posts','subRegion','otherBibaran','addDeadlines')
                     ->where('fiscal_year_id', $fiscal_year_id)
-                    ->get()
+                    ->paginate(10)
                     ]
         );
     }
@@ -232,7 +230,9 @@ class ReportController extends Controller
 
     public function yojana_detail_report()
     {
-        return view('yojana.report.yojana_detail_report');   
+        return view('yojana.report.yojana_detail_report',[
+            'deduction' => deduction::query()->where('is_active',1)->get()
+        ]);   
         
     }
 }

@@ -19,6 +19,15 @@
                 <div class="row">
                     <div class="col-12">
                         <ul class="users-list clearfix">
+
+                            <li class="card shadow-lg">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{ asset('yojana/upabhokta-icon.png') }}" alt="User Image" class="img-fluid"
+                                        width="50">
+                                </div>
+                                <a class="users-list-name mt-3 font-weight-bold"
+                                    href="{{route('plan-operate.search',['upabhokta-samiti'])}}">{{ config('TYPE.2') . __(' मार्फत') }}</a>
+                            </li>
                             <li class="card shadow-lg">
                                 <div class="d-flex justify-content-center">
                                     <img src="{{ asset('yojana/upabhokta-icon.png') }}" alt="User Image" class="img-fluid"
@@ -33,7 +42,7 @@
                                         width="50">
                                 </div>
                                 <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{route('plan-operate.search',['upabhokta-samiti'])}}">{{ config('TYPE.2') . __(' मार्फत') }}</a>
+                                    href="{{route('plan-operate.search',['thekka-marfat'])}}">{{ config('TYPE.5') . __(' मार्फत') }}</a>
                             </li>
                             <li class="card shadow-lg">
                                 <div class="d-flex justify-content-center">

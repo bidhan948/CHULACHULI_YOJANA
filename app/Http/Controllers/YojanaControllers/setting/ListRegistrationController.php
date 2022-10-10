@@ -5,6 +5,7 @@ namespace App\Http\Controllers\YojanaControllers\setting;
 use App\Helpers\YojanaHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\YojanaRequest\ListRegistrationRequest;
+use App\Models\SharedModel\Setting;
 use App\Models\YojanaModel\setting\list_registration;
 use App\Models\YojanaModel\setting\list_registration_attribute;
 use App\Models\YojanaModel\setting\list_registration_attribute_detail;

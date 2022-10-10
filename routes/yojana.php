@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ThekkaController;
 use App\Http\Controllers\YojanaController\setting\StaffController;
 use App\Http\Controllers\YojanaControllers\{
     AdvanceController,
@@ -78,6 +79,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/anugaman-samiti/set-staus/{anugaman_samiti_detail}', [AnugamanSamitiController::class, 'setStatus'])
             ->name('anugaman.setStatus');
         Route::resource('/anugaman-samiti', AnugamanSamitiController::class)->except('destroy');
+
+        //Thekka marfat
+        Route::get('/thekka-suchana-detail/{reg_no}', [ThekkaController::class,'thekkaSuchanaDetail'])->name('thekka-suchana-detail');
 
         // plan operate
         Route::get('/samiti-gathan', [SamitiGathanController::class, 'index'])->name('samiti-gathan.index');
