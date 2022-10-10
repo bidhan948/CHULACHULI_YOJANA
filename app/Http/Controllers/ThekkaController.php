@@ -11,4 +11,9 @@ class ThekkaController extends Controller
     {
         return view('yojana.thekka.thekka_suchana_detail',['plan' => $reg_no]);
     }
+
+    public function thekkaSuchanaDetailSubmit(Request $request)
+    {
+        dd($request->all());
+    }
 }
