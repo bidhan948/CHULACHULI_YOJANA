@@ -30,6 +30,7 @@ use App\Http\Controllers\YojanaControllers\setting\{
     ContingencyController,
     DecimalPointController,
     DeductionControllers,
+    ExcelUploaderController,
     InstiutionalCommitteeController,
     ListRegistrationController,
     TermsController
@@ -131,6 +132,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::prefix('setting')->group(function () {
             Route::get('deduction', [DeductionControllers::class, 'index'])
                 ->name('plan.setting_deduction');
+            Route::post('excel', [ExcelUploaderController::class, 'store'])
+                ->name('plan.setting.excel_store');
+            Route::get('excel', [ExcelUploaderController::class, 'index'])
+                ->name('plan.setting.excel');
             Route::get('plan/staff', [StaffController::class, 'index'])
                 ->name('plan.setting.staff');
             Route::post('plan/staff', [StaffController::class, 'store'])

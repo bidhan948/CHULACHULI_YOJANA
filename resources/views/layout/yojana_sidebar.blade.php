@@ -152,6 +152,12 @@
                             </a>
                         </li> --}}
                         <li class="nav-item ml-1">
+                            <a href="{{ route('plan.setting.excel') }}" class="nav-link @yield('setting_excel_upload')">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('EXCEL UPLOAD') }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item ml-1">
                             <a href="{{ route('setting.merge_index') }}" class="nav-link @yield('setting_merge')">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>{{ __('योजना जोड्नुहोस') }}</p>
