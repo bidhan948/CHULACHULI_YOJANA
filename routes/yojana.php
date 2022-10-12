@@ -81,8 +81,7 @@ Route::group(['middleware' => 'auth'], function () {
             ->name('anugaman.setStatus');
         Route::resource('/anugaman-samiti', AnugamanSamitiController::class)->except('destroy');
 
-        //Thekka marfat
-        Route::get('/thekka-suchana-detail/{reg_no}', [ThekkaController::class,'thekkaSuchanaDetail'])->name('thekka-suchana-detail');
+
 
         // plan operate
         Route::get('/samiti-gathan', [SamitiGathanController::class, 'index'])->name('samiti-gathan.index');
@@ -303,6 +302,10 @@ Route::group(['middleware' => 'auth'], function () {
                 ->name('other-bibaran.store');
             Route::put('/plan/other-bibaran/{other_bibaran}', [OtherBibaranController::class, 'update'])
                 ->name('other-bibaran.update');
+
+            //Thekka marfat
+            Route::get('/thekka-suchana-detail/{reg_no}', [ThekkaController::class,'thekkaSuchanaDetail'])->name('thekka-suchana-detail');
+            Route::post('/thekka-suchana-detail-submit', [ThekkaController::class,'thekkaSuchanaDetailSubmit'])->name('thekka-suchana-detail-submit');
         });
     });
 });
