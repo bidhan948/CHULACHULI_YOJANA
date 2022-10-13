@@ -35,22 +35,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($contract_open as $key => $item)
+                        @foreach ($contractKabol as $key => $item)
                             <tr>
                                 <th scope="row">{{ $key + 1 }}</th>
-                                <td><input type="text" value="{{ $item->name }}" name="contractor_name[]"></td>
+                                <td><input type="text" value="{{ $item->contractor_name }}" name="contractor_name[]" required></td>
                                 <td>
-                                    <select class="form-select" name="has_vat[]" aria-label="Disabled select example">
-                                        <option selected>भ्याट प्रकार</option>
+                                    @if ($item->has_vat==1)
+                                    <select class="form-select" name="has_vat[]" aria-label="Disabled select example" required>
                                         <option value="1">भ्याट सहित</option>
                                         <option value="2">भ्याट बाहेक</option>
                                     </select>
+                                    @else
+                                    <select class="form-select" name="has_vat[]" aria-label="Disabled select example" required>
+                                        <option value="2">भ्याट बाहेक</option>
+                                        <option value="1">भ्याट सहित</option>
+                                    </select>
+                                    @endif
+
                                 </td>
-                                <td><input type="number" name="total_kabol_amount[]"></td>
-                                <td><input type="text" class="date" name="total_amount[]"></td>
-                                <td><input type="number" value="{{ $item->bail_amount }}" name="bank_guarantee_amount[]">
+                                <td><input type="number" value="{{$item->total_kabol_amount}}" name="total_kabol_amount[]" required></td>
+                                <td><input type="text" class="date" value="{{$item->total_amount}}" name="total_amount[]" required></td>
+                                <td><input type="number" value="{{ $item->bank_guarantee }}" name="bank_guarantee_amount[]" required>
                                 </td>
-                                <td><input type="text" name="bail_account_amount[]"></td>
+                                <td><input type="text" value="{{$item->bail_account_amount}}" name="bail_account_amount[]" required></td>
                             </tr>
                         @endforeach
                     </tbody>

@@ -2,6 +2,7 @@
 
 namespace App\Models\YojanaModel\setting;
 
+use App\Models\SharedModel\SettingValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,5 +27,9 @@ class list_registration_attribute_detail extends Model
     public function listRegistrationAttribute(): BelongsTo
     {
         return $this->belongsTo(list_registration_attribute::class);
+    }
+    public function posts()
+    {
+        return $this->belongsTo(SettingValue::class,'post_id','id');
     }
 }

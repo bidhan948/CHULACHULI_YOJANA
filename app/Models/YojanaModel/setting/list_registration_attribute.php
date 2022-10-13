@@ -36,6 +36,8 @@ class list_registration_attribute extends Model
     {
         return $this->hasMany(list_registration_attribute_detail::class);
     }
+
+  
     
     // overriding model for automatic assigning user id
     

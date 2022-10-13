@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\YojanaRequest\ContractRequest;
+use App\Http\Requests\YojanaRequest\ThekkaKabolRequest;
 use App\Http\Requests\YojanaRequest\ThekkaOpenRequest;
 use App\Models\YojanaModel\contract;
+use App\Models\YojanaModel\contractKabol;
 use App\Models\YojanaModel\contractOpen;
 use App\Models\YojanaModel\plan;
 use App\Models\YojanaModel\setting\list_registration;
@@ -65,9 +67,57 @@ class ThekkaController extends Controller
 
     public function thekkaKabol($reg_no)
     {
+        
         $plan = plan::query()->where('reg_no',$reg_no)->with('contractOpens')->first();
-        return view('yojana.thekka.create_thekka_kabol',['plan' => $plan]);
+
+        $contractOpen = contractOpen::query()->where('plan_id',$plan->id)->get();
+        $contractKabol = contractKabol::query()->where('plan_id',$plan->id)->get();
+        
+        if (count($contractOpen)==0) {
+            toast("ठेक्का सुचना विवरण हालिएको छैन", 'error');
+            return redirect()->back();
+        }
+
+        if (count($contractKabol)>0) {
+            return view('yojana.thekka.edit_thekka_kabol',['plan' => $plan,'contract_open'=> $contractOpen,'contractKabol' => $contractKabol]);
+        }
+        return view('yojana.thekka.create_thekka_kabol',['plan' => $plan,'contract_open'=> $contractOpen]);
     }
+    
+    public function thekkaKabolSubmit(ThekkaKabolRequest $request)
+    {
+        $contractKabol = contractKabol::query()->where('plan_id',$request->plan_id)->get();
+        if (count($contractKabol)>0) {
+            foreach ($contractKabol as $key => $value) {
+                $value->delete();
+            }
+        }
+        foreach ($request->contractor_name as $key => $value) {
+           contractKabol::create([
+            'plan_id' => $request->plan_id,
+            'contractor_name' => $request->contractor_name[$key],
+            'has_vat' => $request->has_vat[$key],
+            'total_kabol_amount' => $request->total_kabol_amount[$key],
+            'total_amount' => $request->total_amount[$key],
+            'bank_guarantee' => $request->bank_guarantee_amount[$key],
+            'bail_account_amount' => $request->bail_account_amount[$key],
+           ]);
+          
+        }
+        toast("ठेक्का कबोल सुचना हाल्न सफल भयो", 'success');
+        return redirect()->back();
+    }
+
+    public function thekkaboli($reg_no)
+    {
+        $plan = plan::query()->where('reg_no',$reg_no)->with('contractOpens','contractKabols')->first();
+
+        return view('yojana.thekka.create_thekka_bol',[
+            'plan' => $plan
+        ]);
+
+    }
+    
 
     
     

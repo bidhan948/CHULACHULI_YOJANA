@@ -306,6 +306,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/thekka-open-submit',[ThekkaController::class,'thekkaOpenSubmit'])->name('thekka-open-submit');
 
             Route::get('thekka-kabol/{reg_no}',[ThekkaController::class,'thekkaKabol'])->name('thekka-kabol');
+            Route::post('thekka-kabol-submit',[ThekkaController::class,'thekkaKabolSubmit'])->name('thekka-kabol-submit');
+            
+            Route::get('thekka-boli/{reg_no}',[ThekkaController::class,'thekkaboli'])->name('thekka-boli');
         });
     });
 });

@@ -54,9 +54,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for='(namee,index) in value'>
+                            <tr v-for='(namee,index) in originalValues'>
                                 <th scope="row">@{{ index + 1 }}</th>
-                                <td><input type="text" v-model="namee" name="name[]" readonly></td>
+                                <td><input type="text" v-model="namee.name" name="name[]" readonly></td>
                                 <td><input type="text" v-model="namee.bank_name" name="bank_name[]"></td>
                                 <td><input type="number" v-model="namee.bank_guarantee_amount" name="bank_guarantee_amount[]"></td>
                                 <td><input type="text" v-model="namee.bank_date" class="date" name="bank_date[]"></td>
@@ -97,6 +97,8 @@
             data: {
                 form: [],   
                 value: @json($plan->contractOpens->pluck('name')),
+                originalValues: @json($plan->contractOpens),
+                testValue:[{name:'',bank_name:'',bank_amount:'',bank_date:'',bail_amount:'',remark:''}],
                 options: [],
                 selectedOptions: [],
                 insertedValue:[],
@@ -105,7 +107,25 @@
 
             methods: {
                 onchange() {
+                    let vm = this;
+                    //  vm.value.forEach(checkValue);
+                    // function checkValue(item,index)
+                    // {
+                    //     console.log(item);
+                    //     vm.testValue.forEach(function(i,n){
+                    //         if (item==i.name) {
+                    //         }
+                    //     });
+                    // }
+
+
                     setTimeout(function(){
+                        
+                        // vm.value.forEach(changeValue);
+                        // function changeValue(item, index) {
+                        //     vm.testValue.push({name:item.name,bank_name:item.bank_name,bank_amount:item.bank_guarantee_amount,bank_date:item.bank_date,bail_amount:item.bail_amount,remark:item.remark});
+                        // }
+                     
                         var date = document.getElementsByClassName("date");
                         date.nepaliDatePicker({
                             ndpYear: true,
@@ -133,10 +153,14 @@
                         ndpTriggerButtonText: '<i class="fa fa-calendar"></i>',
                         ndpTriggerButtonClass: 'btn btn-primary',
                  });
-
+                console.log(vm.originalValues);
+                 vm.originalValues.forEach(changeValue);
+                 function changeValue(item, index) {
+                    vm.testValue.push({name:item.name,bank_name:item.bank_name,bank_amount:item.bank_guarantee_amount,bank_date:item.bank_date,bail_amount:item.bail_amount,remark:item.remark});
+                }
+                console.log(vm.testValue);
                 function setOptions(item) {
                     vm.options.push(item.name);
-                    console.log(vm.options);
                 }
             },
 
