@@ -35,9 +35,8 @@ class ExcelUploaderController extends Controller
             $reg_no = $helper->returnLatestRegNo(new plan());
             $data = Excel::toCollection(new PlanImport, $request->file('name'));
             $data = $data[0];
-            for ($loop = 1; $loop < count($data); $loop++) {
-                $reg_no++;
-
+            for ($loop = 1; $loop < count($data); $loop++) {      
+                $grant_amount = 0;          
                 $budget_source = $data[$loop][config('EXCEL_CONSTANT.budget_source')];
                 $budget_array = explode(',', $budget_source);
 
@@ -49,12 +48,12 @@ class ExcelUploaderController extends Controller
                 foreach ($budget_array as $key => $b_a) {
                     $temp_budget = explode('-', $b_a);
                     $budget_source_array[$temp_budget[0]] = $temp_budget[1];
+                    $grant_amount += $temp_budget[1];
                 }
 
                 $ward_array = $data[$loop][config('EXCEL_CONSTANT.sanchalan_hune_ward')] == null ?
                     [] :
                     explode(',', $data[$loop][config('EXCEL_CONSTANT.sanchalan_hune_ward')]);
-                // dd($ward_array);
                 $plan = plan::create(
                     [
                         'reg_no' => $reg_no,
@@ -87,6 +86,9 @@ class ExcelUploaderController extends Controller
                 }
 
                 $budget_source_array = [];
+                $kshera_array = [];
+                $ward_array = [];
+                $reg_no++;
             }
             toast('EXCEL UPLOADED SUCCESSFULLY', "success");
         } catch (Exception $e) {
