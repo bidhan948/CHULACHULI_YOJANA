@@ -19,8 +19,20 @@ class contractKabol extends Model
         'total_kabol_amount',
         'total_amount',
         'bank_guarantee',
-        'bail_account_amount'
+        'bail_account_amount',
+        'is_selected',
+        'date'
     ];
+
+    public function plan()
+    {
+        return $this->belongsTo(plan::class);
+    }
+
+    public function contract()
+    {
+        return $this->belongsTo(contract::class,'plan_id','plan_id');
+    }
 
 
 }

@@ -11,6 +11,9 @@ use App\Models\YojanaModel\contractOpen;
 use App\Models\YojanaModel\plan;
 use App\Models\YojanaModel\setting\list_registration;
 use Illuminate\Http\Request;
+use App\Models\SharedModel\Setting;
+use App\Models\SharedModel\SettingValue;
+use App\Models\YojanaModel\contractKulLagat;
 
 class ThekkaController extends Controller
 {
@@ -111,12 +114,53 @@ class ThekkaController extends Controller
     public function thekkaboli($reg_no)
     {
         $plan = plan::query()->where('reg_no',$reg_no)->with('contractOpens','contractKabols')->first();
-
         return view('yojana.thekka.create_thekka_bol',[
             'plan' => $plan
         ]);
 
     }
+
+    public function thekkaBoliSubmit(Request $request)
+    {
+        $request->validate([
+            'kabol_id' => 'required',
+            'date' => 'required'
+        ]);
+        $contractKabol = contractKabol::query()->where('id',$request->kabol_id)->with('plan','contract')->first();
+        $contractKabol->update([
+            'is_selected' => 1,
+            'date' => $request->date
+        ]);
+        $unit_id = Setting::query()->where('slug', 'setup_unit')->first();
+
+        $units = SettingValue::query()->where('setting_id', $unit_id->id)->get();
+
+
+        return view('yojana.thekka.thekka_kul_lagat',[
+            'contract_kabol' => $contractKabol,
+            'units' => $units
+        ]);
+    }
+
+    public function thekkaKulLagatSubmit(Request $request)
+    {
+        
+        $plan = plan::query()->where('id',$request->plan_id)->first();
+        
+
+        $request->validate([
+            'physical_amount' => 'required',
+            'unit_id' => 'required'
+        ]);
+
+        contractKulLagat::create($request->except('_token'));
+        return view('yojana.thekka.create_thekka_run_detail',[
+            'plan' => $plan
+        ]);
+
+    }
+
+
     
 
     

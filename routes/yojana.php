@@ -266,7 +266,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/plan/type-bibaran/store', [TypeController::class, 'store'])->name('type.store');
             Route::put('/plan/type-bibaran/update/{type}', [TypeController::class, 'update'])->name('type.update');
             // consumer bibaran
-            Route::get('/plan/consumer-bibaran/{reg_no}', [ConsumerController::class, 'index'])->name('plan_consumer.index');
+            Route::get('/plan/consumer-bibaran/{reg_no}', [ConsumerController::class, '\index'])->name('plan_consumer.index');
            Route::post('/plan/consumer-bibaran/store', [ConsumerController::class, 'store'])->name('plan_consumer.store');
             Route::put('/plan/consumer-bibaran/update/{consumer}', [ConsumerController::class, 'update'])->name('plan_consumer.update');
             // Sanstha samiti
@@ -309,6 +309,10 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('thekka-kabol-submit',[ThekkaController::class,'thekkaKabolSubmit'])->name('thekka-kabol-submit');
             
             Route::get('thekka-boli/{reg_no}',[ThekkaController::class,'thekkaboli'])->name('thekka-boli');
+            Route::post('thekka-boli-submit',[ThekkaController::class,'thekkaBoliSubmit'])->name('thekka-boli-submit');
+
+            Route::post('thekka-kul-lagat-submit',[ThekkaController::class,'thekkaKulLagatSubmit'])->name('thekka-kul-lagat-submit');
+
         });
     });
 });

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateContractKabolsTable extends Migration
+class CreateContractKulLagatsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,15 @@ class CreateContractKabolsTable extends Migration
      */
     public function up()
     {
-        Schema::create('contract_kabols', function (Blueprint $table) {
+        Schema::create('contract_kul_lagats', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('plan_id');
             $table->unsignedInteger('kabol_id');
-            $table->string('contractor_name');
-            $table->unsignedInteger('has_vat');
+            $table->unsignedInteger('physical_amount');
+            $table->unsignedInteger('unit_id');
+            $table->unsignedInteger('grant_amount');
             $table->unsignedInteger('total_kabol_amount');
-            $table->unsignedInteger('total_amount');
-            $table->string('bank_guarantee');
-            $table->unsignedInteger('bail_account_amount');
+            $table->string('contractor_name');
             $table->timestamps();
         });
     }
@@ -34,6 +33,6 @@ class CreateContractKabolsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contract_kabols');
+        Schema::dropIfExists('contract_kul_lagats');
     }
 }
