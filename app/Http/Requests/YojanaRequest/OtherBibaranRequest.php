@@ -34,7 +34,8 @@ class OtherBibaranRequest extends FormRequest
             'house_family_count' => 'required',
             'female' => 'required',
             'male' => 'required',
-            'committee_count' => 'sometimes'
+            'committee_count' => 'sometimes',
+            'work_order_date' => 'sometimes'
         ];
     }
 }

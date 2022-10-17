@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\YojanaRequest\ContractRequest;
 use App\Http\Requests\YojanaRequest\ThekkaKabolRequest;
 use App\Http\Requests\YojanaRequest\ThekkaOpenRequest;
+use App\Models\PisModel\Staff;
 use App\Models\YojanaModel\contract;
 use App\Models\YojanaModel\contractKabol;
 use App\Models\YojanaModel\contractOpen;
@@ -144,13 +145,13 @@ class ThekkaController extends Controller
     {
         $plan = plan::query()->where('reg_no', $reg_no)->first();
         $contractKabol = contractKabol::query()->where(['plan_id' => $plan->id, 'is_selected' => true])->first();
-        $contract_kul_lagat = contractKulLagat::query()->where('plan_id',$plan->id)->first();
+        $contract_kul_lagat = contractKulLagat::query()->where('plan_id', $plan->id)->first();
 
         if ($contractKabol == null) {
             Alert::error("ठेक्का खोलिने फारम भरिएको छैन");
             return redirect()->back();
         }
-        
+
         $unit_id = Setting::query()->where('slug', 'setup_unit')->first();
         $units = SettingValue::query()->where('setting_id', $unit_id->id)->get();
 
@@ -185,6 +186,20 @@ class ThekkaController extends Controller
 
     public function thekkaBibaran($reg_no)
     {
-        dd($reg_no);
+        $plan = plan::query()->where('reg_no', $reg_no)->first();
+        $contract_kul_lagat = contractKulLagat::query()->where('plan_id', $plan->id)->first();
+        $contractKabol = contractKabol::query()->where(['plan_id' => $plan->id, 'is_selected' => true])->first();
+
+        if ($contract_kul_lagat == null || $contractKabol == null) {
+            Alert::error("सम्पूर्ण फारम भरेर मात्र अगाडि बढ्नुहोला");
+            return redirect()->back();
+        }
+
+        return view('yojana.thekka.create_thekka_run_detail', [
+            'plan' => $plan,
+            'reg_no' => $reg_no,
+            'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
+            'contract_kabol' => $contractKabol
+        ]);
     }
 }

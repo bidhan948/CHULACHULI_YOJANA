@@ -25,61 +25,59 @@
             <div class="card-body">
                 <div class="row">
 
-                    @if(config('TYPE.' . session('type_id')) == 'ठेक्का')
-                    <div class="col-3">
-                        <ul class="users-list clearfix">
-                            <li class="card shadow-lg" style="width:100%;">
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{ asset('yojana/upabhokta-icon.png') }}" alt="User Image" class="img-fluid"
-                                        width="50">
-                                </div>
-                                <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{ route('thekka-suchana-detail', $reg_no) }}">{{ __('ठेक्का सुचना विवरण') }}</a>
-                            </li>
-                        </ul>
-                    </div>
+                    @if (config('TYPE.' . session('type_id')) == 'ठेक्का')
+                        <div class="col-3">
+                            <ul class="users-list clearfix">
+                                <li class="card shadow-lg" style="width:100%;">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="{{ asset('yojana/upabhokta-icon.png') }}" alt="User Image"
+                                            class="img-fluid" width="50">
+                                    </div>
+                                    <a class="users-list-name mt-3 font-weight-bold"
+                                        href="{{ route('thekka-suchana-detail', $reg_no) }}">{{ __('ठेक्का सुचना विवरण') }}</a>
+                                </li>
+                            </ul>
+                        </div>
 
-                    <div class="col-3">
-                        <ul class="users-list clearfix">
-                            <li class="card shadow-lg" style="width:100%;">
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
-                                        width="50">
-                                </div>
-                                <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{ route('thekka-open', $reg_no) }}">{{ __('ठेक्का खोलिएको फारम') }}</a>
-                            </li>
-                        </ul>
-                    </div>
+                        <div class="col-3">
+                            <ul class="users-list clearfix">
+                                <li class="card shadow-lg" style="width:100%;">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
+                                            width="50">
+                                    </div>
+                                    <a class="users-list-name mt-3 font-weight-bold"
+                                        href="{{ route('thekka-open', $reg_no) }}">{{ __('ठेक्का खोलिएको फारम') }}</a>
+                                </li>
+                            </ul>
+                        </div>
 
-                    <div class="col-3">
-                        <ul class="users-list clearfix">
-                            <li class="card shadow-lg" style="width:100%;">
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
-                                        width="50">
-                                </div>
-                                <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{ route('thekka-kabol', $reg_no) }}">{{ __('ठेक्का कबोल फारम') }}</a>
-                            </li>
-                        </ul>
-                    </div>
+                        <div class="col-3">
+                            <ul class="users-list clearfix">
+                                <li class="card shadow-lg" style="width:100%;">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
+                                            width="50">
+                                    </div>
+                                    <a class="users-list-name mt-3 font-weight-bold"
+                                        href="{{ route('thekka-kabol', $reg_no) }}">{{ __('ठेक्का कबोल फारम') }}</a>
+                                </li>
+                            </ul>
+                        </div>
 
-                    <div class="col-3">
-                        <ul class="users-list clearfix">
-                            <li class="card shadow-lg" style="width:100%;">
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
-                                        width="50">
-                                </div>
-                                <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{ route('thekka-boli', $reg_no) }}">{{ __('ठेक्का बोलिने फारम') }}</a>
-                            </li>
-                        </ul>
-                    </div>
+                        <div class="col-3">
+                            <ul class="users-list clearfix">
+                                <li class="card shadow-lg" style="width:100%;">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
+                                            width="50">
+                                    </div>
+                                    <a class="users-list-name mt-3 font-weight-bold"
+                                        href="{{ route('thekka-boli', $reg_no) }}">{{ __('ठेक्का बोलिने फारम') }}</a>
+                                </li>
+                            </ul>
+                        </div>
                     @endif
-
-
                     <div class="col-3">
                         <ul class="users-list clearfix">
                             <li class="card shadow-lg" style="width:100%;">
@@ -88,7 +86,7 @@
                                         width="50">
                                 </div>
                                 <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{ route('plan.thekka_kul_lagat', $reg_no) }}">{{ __('योजनाको कुल लागत अनुमान') }}</a>
+                                    href="{{ route(session('type_id') == config('TYPE.CONTRACT_MARFAT') ? 'plan.thekka_kul_lagat' : 'plan.kul-lagat', $reg_no) }}">{{ __('योजनाको कुल लागत अनुमान') }}</a>
                             </li>
                         </ul>
                     </div>
@@ -100,46 +98,48 @@
                                         width="50">
                                 </div>
                                 <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{ route('plan.consumer-bibaran', $reg_no) }}">{{ config('TYPE.' . session('type_id')) . ' विवरण ' }}</a>
+                                    href="{{ route(session('type_id') != config('TYPE.CONTRACT_MARFAT') ? 'plan.consumer-bibaran' : 'plan.thekka_bibaran', $reg_no) }}">{{ config('TYPE.' . session('type_id')) . ' विवरण ' }}</a>
                             </li>
                         </ul>
                     </div>
-                    <div class="col-3">
-                        <ul class="users-list clearfix">
-                            <li class="card shadow-lg" style="width:100%;">
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{ asset('yojana/user-profile.png') }}" alt="User Image" class="img-fluid"
-                                        width="50">
-                                </div>
-                                <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{ route('plan.anugaman', $reg_no) }}">{{ 'अनुगमन समितिको विवरण ' }}</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-3">
-                        <ul class="users-list clearfix">
-                            <li class="card shadow-lg" style="width:100%;">
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
-                                        width="50">
-                                </div>
-                                <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{ route('plan.other_bibaran', $reg_no) }}">{{ __('योजना सम्बन्धि अन्य विवरण ') }}</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-3">
-                        <ul class="users-list clearfix">
-                            <li class="card shadow-lg" style="width:100%;">
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
-                                        width="50">
-                                </div>
-                                <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{ route('plan_bhuktani.dashboard', $reg_no) }}">{{ __('भुक्तानी') }}</a>
-                            </li>
-                        </ul>
-                    </div>
+                    @if (session('type_id') != config('TYPE.CONTRACT_MARFAT'))
+                        <div class="col-3">
+                            <ul class="users-list clearfix">
+                                <li class="card shadow-lg" style="width:100%;">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="{{ asset('yojana/user-profile.png') }}" alt="User Image"
+                                            class="img-fluid" width="50">
+                                    </div>
+                                    <a class="users-list-name mt-3 font-weight-bold"
+                                        href="{{ route('plan.anugaman', $reg_no) }}">{{ 'अनुगमन समितिको विवरण ' }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-3">
+                            <ul class="users-list clearfix">
+                                <li class="card shadow-lg" style="width:100%;">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
+                                            width="50">
+                                    </div>
+                                    <a class="users-list-name mt-3 font-weight-bold"
+                                        href="{{ route('plan.other_bibaran', $reg_no) }}">{{ __('योजना सम्बन्धि अन्य विवरण ') }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-3">
+                            <ul class="users-list clearfix">
+                                <li class="card shadow-lg" style="width:100%;">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image"
+                                            class="img-fluid" width="50">
+                                    </div>
+                                    <a class="users-list-name mt-3 font-weight-bold"
+                                        href="{{ route('plan_bhuktani.dashboard', $reg_no) }}">{{ __('भुक्तानी') }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    @endif
                     <div class="col-3">
                         <ul class="users-list clearfix">
                             <li class="card shadow-lg" style="width:100%;">
