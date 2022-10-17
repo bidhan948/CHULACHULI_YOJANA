@@ -38,6 +38,45 @@
                             </li>
                         </ul>
                     </div>
+
+                    <div class="col-3">
+                        <ul class="users-list clearfix">
+                            <li class="card shadow-lg" style="width:100%;">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
+                                        width="50">
+                                </div>
+                                <a class="users-list-name mt-3 font-weight-bold"
+                                    href="{{ route('thekka-open', $reg_no) }}">{{ __('ठेक्का खोलिएको फारम') }}</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-3">
+                        <ul class="users-list clearfix">
+                            <li class="card shadow-lg" style="width:100%;">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
+                                        width="50">
+                                </div>
+                                <a class="users-list-name mt-3 font-weight-bold"
+                                    href="{{ route('thekka-kabol', $reg_no) }}">{{ __('ठेक्का कबोल फारम') }}</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-3">
+                        <ul class="users-list clearfix">
+                            <li class="card shadow-lg" style="width:100%;">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
+                                        width="50">
+                                </div>
+                                <a class="users-list-name mt-3 font-weight-bold"
+                                    href="{{ route('thekka-boli', $reg_no) }}">{{ __('ठेक्का बोलिने फारम') }}</a>
+                            </li>
+                        </ul>
+                    </div>
                     @endif
 
 

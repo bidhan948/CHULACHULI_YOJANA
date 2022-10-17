@@ -64,7 +64,6 @@
                                         @endforeach
                                     </select></p>
                                 <span id="bank_address"> </span> <br>
-
                                 <p class="letter_text">
                                     उपरोक्त विषयमा यस {{ config('constant.SITE_NAME') }}
                                     र {{ $type->typeable->name ?? '' }} विच

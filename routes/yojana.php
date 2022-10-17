@@ -271,8 +271,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/plan/type-bibaran/store', [TypeController::class, 'store'])->name('type.store');
             Route::put('/plan/type-bibaran/update/{type}', [TypeController::class, 'update'])->name('type.update');
             // consumer bibaran
-            Route::get('/plan/consumer-bibaran/{reg_no}', [ConsumerController::class, 'index'])->name('plan_consumer.index');
-            Route::post('/plan/consumer-bibaran/store', [ConsumerController::class, 'store'])->name('plan_consumer.store');
+            Route::get('/plan/consumer-bibaran/{reg_no}', [ConsumerController::class, '\index'])->name('plan_consumer.index');
+           Route::post('/plan/consumer-bibaran/store', [ConsumerController::class, 'store'])->name('plan_consumer.store');
             Route::put('/plan/consumer-bibaran/update/{consumer}', [ConsumerController::class, 'update'])->name('plan_consumer.update');
             // Sanstha samiti
             Route::get('/plan/sanstha_samiti/{reg_no}', [InstiutionalCommitteeController::class, 'index'])
@@ -306,6 +306,18 @@ Route::group(['middleware' => 'auth'], function () {
             //Thekka marfat
             Route::get('/thekka-suchana-detail/{reg_no}', [ThekkaController::class,'thekkaSuchanaDetail'])->name('thekka-suchana-detail');
             Route::post('/thekka-suchana-detail-submit', [ThekkaController::class,'thekkaSuchanaDetailSubmit'])->name('thekka-suchana-detail-submit');
+            
+            Route::get('/thekka-open/{reg_no}', [ThekkaController::class,'thekkaOpenForm'])->name('thekka-open');
+            Route::post('/thekka-open-submit',[ThekkaController::class,'thekkaOpenSubmit'])->name('thekka-open-submit');
+
+            Route::get('thekka-kabol/{reg_no}',[ThekkaController::class,'thekkaKabol'])->name('thekka-kabol');
+            Route::post('thekka-kabol-submit',[ThekkaController::class,'thekkaKabolSubmit'])->name('thekka-kabol-submit');
+            
+            Route::get('thekka-boli/{reg_no}',[ThekkaController::class,'thekkaboli'])->name('thekka-boli');
+            Route::post('thekka-boli-submit',[ThekkaController::class,'thekkaBoliSubmit'])->name('thekka-boli-submit');
+
+            Route::post('thekka-kul-lagat-submit',[ThekkaController::class,'thekkaKulLagatSubmit'])->name('thekka-kul-lagat-submit');
+
         });
     });
 });
