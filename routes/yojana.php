@@ -307,6 +307,10 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/thekka-suchana-detail/{reg_no}', [ThekkaController::class,'thekkaSuchanaDetail'])->name('thekka-suchana-detail');
             Route::post('/thekka-suchana-detail-submit', [ThekkaController::class,'thekkaSuchanaDetailSubmit'])->name('thekka-suchana-detail-submit');
             
+            Route::get('/thekka-kul-lagat/{reg_no}', [ThekkaController::class,'thekkaKulalagat'])->name('plan.thekka_kul_lagat');
+            
+            Route::get('/thekka-bibaran/{reg_no}', [ThekkaController::class,'thekkaBibaran'])->name('plan.thekka_bibaran');
+
             Route::get('/thekka-open/{reg_no}', [ThekkaController::class,'thekkaOpenForm'])->name('thekka-open');
             Route::post('/thekka-open-submit',[ThekkaController::class,'thekkaOpenSubmit'])->name('thekka-open-submit');
 

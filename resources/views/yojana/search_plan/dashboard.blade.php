@@ -88,7 +88,7 @@
                                         width="50">
                                 </div>
                                 <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{ route('plan.kul-lagat', $reg_no) }}">{{ __('योजनाको कुल लागत अनुमान') }}</a>
+                                    href="{{ route('plan.thekka_kul_lagat', $reg_no) }}">{{ __('योजनाको कुल लागत अनुमान') }}</a>
                             </li>
                         </ul>
                     </div>
