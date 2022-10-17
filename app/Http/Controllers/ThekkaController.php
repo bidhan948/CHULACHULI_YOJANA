@@ -71,7 +71,6 @@ class ThekkaController extends Controller
 
     public function thekkaKabol($reg_no)
     {
-
         $plan = plan::query()->where('reg_no', $reg_no)->with('contractOpens')->first();
 
         $contractOpen = contractOpen::query()->where('plan_id', $plan->id)->get();
