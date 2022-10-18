@@ -30,7 +30,8 @@ class other_bibaran extends Model
         'user_id',
         'agreement_date_nep',
         'agreement_date_eng',
-        'work_order_date'
+        'work_order_date',
+        'venue'
     ];
 
     public function Plan(): BelongsTo

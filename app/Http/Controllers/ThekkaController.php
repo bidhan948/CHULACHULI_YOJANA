@@ -106,9 +106,7 @@ class ThekkaController extends Controller
                 'list_registration_attribute_id' => $request->list_registration_attribute_id[$key],
                 'total_kabol_amount' => $request->total_kabol_amount[$key],
                 'total_amount' => $request->total_amount[$key],
-                'bank_date' => $request->bank_date[$key],
-                'bank_guarantee' => $request->bank_guarantee_amount[$key],
-                'bail_account_amount' => $request->bail_account_amount[$key],
+                'remark' => $request->remark[$key]
             ]);
         }
         toast("ठेक्का कबोल सुचना हाल्न सफल भयो", 'success');

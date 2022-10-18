@@ -176,6 +176,25 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-6">
+                                <div class="form-group mt-2">
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">{{ __('योजना संचालन हुने स्थान :') }}
+                                                <span id="tole_bikas_group"
+                                                    class="text-danger font-weight-bold px-1">*</span></span>
+                                        </div>
+                                        <input type="text"
+                                            class="form-control form-control-sm number @error('venue') is-invalid @enderror"
+                                            name="venue" required>
+                                        @error('venue')
+                                            <p class="invalid-feedback" style="font-size: 0.9rem">
+                                                {{ 'योजना संचालन हुने स्थान :' }}
+                                            </p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-6 mt-2">
                                 <a class="btn btn-sm btn-primary" id="add"><i class="fa-solid fa-plus px-1"></i></a>
                             </div>

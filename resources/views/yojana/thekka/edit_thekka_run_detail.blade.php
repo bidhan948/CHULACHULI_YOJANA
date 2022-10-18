@@ -136,6 +136,25 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-6">
+                        <div class="form-group mt-2">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">{{ __('योजना संचालन हुने स्थान') }}
+                                        <span id="tole_bikas_group"
+                                            class="text-danger font-weight-bold px-1">*</span></span>
+                                </div>
+                                <input type="text"
+                                    class="form-control form-control-sm @error('venue') is-invalid @enderror"
+                                    name="venue" id="venue" value="{{$other_bibaran->venue}}">
+                                @error('venue')
+                                    <p class="invalid-feedback" style="font-size: 0.9rem">
+                                        {{ 'योजना संचालन हुने स्थान अनिवार्य छ' }}
+                                    </p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-12">
                         <div id="rowForAdd">
                             @foreach ($other_bibaran->otherBibaranDetail as $key => $otherBibaranDetail)

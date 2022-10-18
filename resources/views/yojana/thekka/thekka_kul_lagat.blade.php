@@ -59,30 +59,29 @@
                                     value="{{ $contract_kabol->plan->grant_amount }}" name="grant_amount" readonly>
                             </td>
                         </tr>
+                        <tr>
+                            <td>ठेक्का कबोल गरेको कुल रकम (भ्याट बाहेक) </td>
+                            <td><input class="form-control" value="{{ nepali($contract_kabol->total_kabol_amount) }}"
+                                    type="text" readonly>
+
+                            </td>
+                        </tr>
 
                         <tr>
-                            <td>कुल ठेक्का रकम जम्मा </td>
+                            <td>कुल ठेक्का रकम जम्मा (भ्याट सहित)</td>
                             <td><input class="form-control"
-                                    value="{{ nepali($contract_kabol->contract->total_thekka_amount) }}" type="text"
+                                    value="{{ nepali($contract_kabol->total_amount) }}" type="text"
                                     readonly>
-                                <input class="form-control" value="{{ $contract_kabol->contract->total_thekka_amount }}"
+                                <input class="form-control" value="{{ $contract_kabol->total_amount }}"
                                     name="total_thekka_amount" type="hidden" readonly>
                             </td>
                         </tr>
 
                         <tr>
-                            <td>ठेक्का कबोल गरेको कुल रकम </td>
-                            <td><input class="form-control" value="{{ nepali($contract_kabol->total_kabol_amount) }}"
-                                    type="text" readonly>
-
-                            </td>
-                        </tr>
-
-                        <tr>
                             <td>कार्यदेश दिएको रकम </td>
-                            <td><input class="form-control" value="{{ nepali($contract_kabol->total_kabol_amount) }}"
+                            <td><input class="form-control" value="{{ nepali($contract_kabol->total_amount) }}"
                                     type="text" readonly>
-                                <input class="form-control" value="{{ $contract_kabol->total_kabol_amount }}"
+                                <input class="form-control" value="{{ $contract_kabol->total_amount }}"
                                     name="total_kabol_amount" type="hidden" readonly>
                             </td>
                         </tr>

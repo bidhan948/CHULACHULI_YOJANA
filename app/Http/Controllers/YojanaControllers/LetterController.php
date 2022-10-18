@@ -247,7 +247,7 @@ class LetterController extends Controller
         $approvePosition = StaffService::query()->where('user_id', $request->approve)->first();
 
         return view('yojana.letter.print_plan_work_order_letter', [
-            'reg_no' => $request->plan_id,
+            'reg_no' => $plan->reg_no,
             'plan' => $plan,
             'type' => type::query()->where('plan_id', $plan->id)->first(),
             'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),

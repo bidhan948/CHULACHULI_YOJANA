@@ -35,7 +35,8 @@ class OtherBibaranRequest extends FormRequest
             'female' => 'required',
             'male' => 'required',
             'committee_count' => 'sometimes',
-            'work_order_date' => 'sometimes'
+            'work_order_date' => 'sometimes',
+            'venue' => 'sometimes'
         ];
     }
 }

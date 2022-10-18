@@ -329,6 +329,8 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('print/letter/contract/{reg_no}', [ContractLetterController::class, 'printThekkaContractLetter'])->name('print.plan.letter.thekka.contract');
                 Route::get('letter/bank/{reg_no}', [ContractLetterController::class, 'bankLetter'])->name('plan.letter.thekka.bank');
                 Route::get('print/letter/bank', [ContractLetterController::class, 'printBankLetter'])->name('print.plan.letter.thekka.bank');
+                Route::get('letter/work-order/{reg_no}', [ContractLetterController::class, 'workOrderLetter'])->name('plan.letter.thekka.work_order');
+                Route::get('print/letter/work-order', [ContractLetterController::class, 'printWorkOrderLetter'])->name('print.plan.letter.thekka.work_order');
             });
         });
     });
