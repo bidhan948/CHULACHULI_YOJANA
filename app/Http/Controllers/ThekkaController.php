@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\SharedModel\Setting;
 use App\Models\SharedModel\SettingValue;
 use App\Models\YojanaModel\contractKulLagat;
+use App\Models\YojanaModel\other_bibaran;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ThekkaController extends Controller
@@ -192,17 +193,21 @@ class ThekkaController extends Controller
         $plan = plan::query()->where('reg_no', $reg_no)->first();
         $contract_kul_lagat = contractKulLagat::query()->where('plan_id', $plan->id)->first();
         $contractKabol = contractKabol::query()->where(['plan_id' => $plan->id, 'is_selected' => true])->first();
+        $other_bibaran = other_bibaran::query()->where('plan_id', $plan->id)->with('otherBibaranDetail')->first();
 
         if ($contract_kul_lagat == null || $contractKabol == null) {
             Alert::error("सम्पूर्ण फारम भरेर मात्र अगाडि बढ्नुहोला");
             return redirect()->back();
         }
 
-        return view('yojana.thekka.create_thekka_run_detail', [
+        $view = $other_bibaran == null ? 'create' : 'edit';
+
+        return view('yojana.thekka.' . $view . '_thekka_run_detail', [
             'plan' => $plan,
             'reg_no' => $reg_no,
             'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
-            'contract_kabol' => $contractKabol
+            'contract_kabol' => $contractKabol,
+            'other_bibaran' => $other_bibaran
         ]);
     }
 }

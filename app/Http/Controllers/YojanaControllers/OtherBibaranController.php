@@ -80,7 +80,6 @@ class OtherBibaranController extends Controller
 
     public function update(OtherBibaranRequest $request, other_bibaran $other_bibaran): RedirectResponse
     {
-        // dd($request->all());
         $plan = plan::query()
             ->where('id', $request->plan_id)
             ->first();
