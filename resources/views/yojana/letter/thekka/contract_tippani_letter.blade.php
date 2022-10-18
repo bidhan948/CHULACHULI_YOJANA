@@ -66,7 +66,7 @@
                                     ठेक्काको बोलपत्र पेश
                                     भएको।
                                 </p>
-                                <table class="letter_table table table-bordered half_left mt-2">
+                                <table class="table table-bordered mt-2">
                                     <tr>
                                         <th class="text-center">सि.नं</th>
                                         <th class="text-center">फर्म/कम्पनीको नाम</th>

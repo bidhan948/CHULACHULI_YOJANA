@@ -43,7 +43,7 @@
                         ठेक्काको बोलपत्र पेश
                         भएको।
                     </p>
-                    <table class="letter_table table table-bordered half_left mt-2">
+                    <table class="table table-responsive table-bordered mt-2" style="border-collapse: collapse; margin-top:15px;">
                         <tr>
                             <th class="text-center">सि.नं</th>
                             <th class="text-center">फर्म/कम्पनीको नाम</th>
@@ -74,7 +74,7 @@
                             </tr>
                         @endforeach
                     </table>
-                    <p class="mt-2">
+                    <p class="mt-2" style="margin-top:15px;">
                         माथि उल्लेखित फर्म/कम्पनीहरुबाट प्राप्त बोलपत्र प्रस्ताब मध्ये सबै भन्दा घटी कबोल गर्ने
                         श्री {{ $contract_kabol_single->listRegistrationAttribute->name }} को रित पुर्बकको कबोल अंक सबै
                         भन्दा घटी रकम ( भ्याट सहित ) रु
