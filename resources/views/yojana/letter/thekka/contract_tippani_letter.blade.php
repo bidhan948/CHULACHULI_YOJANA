@@ -79,7 +79,8 @@
                                     @foreach ($contract_kabols as $key => $contract_kabol)
                                         <tr>
                                             <td class="text-center">{{ Nepali($key + 1) }}</td>
-                                            <td class="text-center">{{ $contract_kabol->contractor_name }}</td>
+                                            <td class="text-center">{{ Nepali($contract_kabol->listRegistrationAttribute->name) }}</td>
+                                            <td class="text-center">{{ Nepali($contract_kabol->listRegistrationAttribute->address) }}</td>
                                         </tr>
                                     @endforeach
                                 </table>

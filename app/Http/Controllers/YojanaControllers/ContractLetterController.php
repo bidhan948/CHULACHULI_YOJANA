@@ -22,6 +22,7 @@ class ContractLetterController extends Controller
 
         $contract_kabols = contractKabol::query()
         ->where('plan_id', $plan->id)
+        ->with('listRegistrationAttribute')
         ->get();
 
         if ($plan == null || !$contract_kabols->count()) {

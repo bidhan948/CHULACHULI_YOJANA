@@ -24,7 +24,8 @@ class contractKabol extends Model
         'bail_account_amount',
         'is_selected',
         'date',
-        'list_registration_attribute_id'
+        'list_registration_attribute_id',
+        'bank_date'
     ];
 
     public function plan()
