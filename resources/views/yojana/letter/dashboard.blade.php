@@ -41,7 +41,7 @@
                             <div class="d-flex justify-content-center">
                                 <img src="{{ asset('yojana/pen-icon.png') }}" alt="User Image" class="img-fluid" width="50">
                             </div>
-                            <a class="users-list-name mt-3 font-weight-bold" href="{{ route('plan.letter.bank', $reg_no) }}">{{ __('बैंक पत्र') }}</a>
+                            <a class="users-list-name mt-3 font-weight-bold" href="{{ route(session('type_id') == config('TYPE.CONTRACT_MARFAT') ? 'plan.letter.thekka.bank' : 'plan.letter.bank', $reg_no) }}">{{ __('बैंक पत्र') }}</a>
                         </li>
                     </ul>
                 </div>
