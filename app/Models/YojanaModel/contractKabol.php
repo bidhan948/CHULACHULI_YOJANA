@@ -25,7 +25,8 @@ class contractKabol extends Model
         'is_selected',
         'date',
         'list_registration_attribute_id',
-        'bank_date'
+        'bank_date',
+        'remark'
     ];
 
     public function plan()

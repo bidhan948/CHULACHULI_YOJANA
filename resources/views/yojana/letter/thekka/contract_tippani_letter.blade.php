@@ -31,7 +31,7 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="letter_wrap">
-                    <form action="{{ route('letter.printContract') }}" method="get" target="_blank">
+                    <form action="{{ route('print.plan.letter.thekka.contract',$reg_no) }}" method="get" target="_blank">
                         <input name="plan_id" value="{{ $plan->id }}" type="hidden">
                         <div class="letter_inner">
                             <button id="print_btn" type="submit">
@@ -73,17 +73,40 @@
                                         <th class="text-center">ठेगाना</th>
                                         <th class="text-center">कबोल रु अंकमा (भ्याट बाहेक)</th>
                                         <th class="text-center">कबोल रु अंकमा (भ्याट सहित)</th>
-                                        <th class="text-center">कबोल रु अक्षरमा</th>
+                                        <th class="text-center">कबोल रु अक्षरमा (भ्याट सहित)</th>
                                         <th class="text-center">कैफियत</th>
                                     </tr>
                                     @foreach ($contract_kabols as $key => $contract_kabol)
                                         <tr>
                                             <td class="text-center">{{ Nepali($key + 1) }}</td>
-                                            <td class="text-center">{{ Nepali($contract_kabol->listRegistrationAttribute->name) }}</td>
-                                            <td class="text-center">{{ Nepali($contract_kabol->listRegistrationAttribute->address) }}</td>
+                                            <td class="text-center">
+                                                {{ Nepali($contract_kabol->listRegistrationAttribute->name) }}</td>
+                                            <td class="text-center">
+                                                {{ Nepali($contract_kabol->listRegistrationAttribute->address) }}</td>
+                                            <td class="text-center">
+                                                {{ NepaliAmount($contract_kabol->has_vat == 1 ? getPreciseFloat($contract_kabol->total_kabol_amount / 1.13, 2) : $contract_kabol->total_kabol_amount) }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ NepaliAmount($contract_kabol->total_amount) }}
+                                            </td>
+                                            @php
+                                                $budget_aray = explode('.', $contract_kabol->total_amount);
+                                            @endphp
+                                            <td class="text-center">{{ 'रु ' . convert($budget_aray[0]) }}</td>
+                                            <td class="text-center">{{ $contract_kabol->remark }}</td>
                                         </tr>
                                     @endforeach
                                 </table>
+                                <p class="mt-2">
+                                    माथि उल्लेखित फर्म/कम्पनीहरुबाट प्राप्त बोलपत्र प्रस्ताब मध्ये सबै भन्दा घटी कबोल गर्ने
+                                    श्री {{$contract_kabol_single->listRegistrationAttribute->name}} को रित पुर्बकको कबोल अंक सबै भन्दा घटी रकम ( भ्याट सहित ) रु
+                                    {{NepaliAmount($contract_kabol_single->total_amount)}} 
+                                    @php
+                                        $budget_single = explode('.',$contract_kabol_single->total_amount)
+                                    @endphp
+                                    अक्षरुपी {{convert($budget_single[0])}} मात्र भएकाले सार्बजनिक खरिद ऐन २०६३ को नियम २५ बमोजिम निज
+                                    सँग ठेक्का संझौताको लागी निर्णयार्थ यो टिप्पणी पेश गरेको छु ।
+                                </p>
                             </div>
                             <div class="letter_footer">
                                 <!-- Sign Item  -->
@@ -107,6 +130,16 @@
                                         @endforeach
                                     </select>
                                     <div id="present_post"></div>
+                                </div>
+                                <div class="letter_sign">
+                                    <div class="sign_title">सिफारिस गर्ने</div>
+                                    <select name="sifaris" id="sifaris" onchange="assignPost('sifaris')">
+                                        <option value="">-- छानुहोस --</option>
+                                        @foreach ($staffs as $staff)
+                                            <option value="{{ $staff->user_id }}">{{ $staff->nep_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div id="sifaris_post"></div>
                                 </div>
                                 <!-- Sign Item  -->
                                 <div class="letter_sign">

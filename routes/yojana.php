@@ -326,6 +326,7 @@ Route::group(['middleware' => 'auth'], function () {
             // thekka route
             Route::prefix('thekka')->group(function () {
                 Route::get('letter/contract/{reg_no}', [ContractLetterController::class, 'thekkaContractLetter'])->name('plan.letter.thekka.contract');
+                Route::get('print/letter/contract/{reg_no}', [ContractLetterController::class, 'printThekkaContractLetter'])->name('print.plan.letter.thekka.contract');
             });
         });
     });
