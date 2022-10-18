@@ -30,7 +30,7 @@
                             <template>
                                 <div>
                                     <multiselect v-model="value" placeholder="निर्माण व्यवसायीको छान्नुहोस्"
-                                        @select="onchange()" :options="options" :multiple="true" ></multiselect>
+                                        @select="onchange()" :options="listRegistration" :multiple="true" label="name" track-by="id"></multiselect>
                                 </div>
                             </template>
                         </div>
@@ -56,7 +56,10 @@
                         <tbody>
                             <tr v-for='(namee,index) in value'>
                                 <th scope="row">@{{ index + 1 }}</th>
-                                <td><input type="text" v-model="namee" name="name[]" readonly></td>
+                                <td>
+                                    <input type="text" v-model="namee.name" name="name[]" readonly>
+                                    <input type="hidden" v-model="namee.id" name="id[]" readonly>
+                                </td>
                                 <td><input type="text" name="bank_name[]"></td>
                                 <td><input type="number" name="bank_guarantee_amount[]"></td>
                                 <td><input type="text" class="date" name="bank_date[]"></td>
@@ -98,13 +101,13 @@
                 form: [],   
                 value: [],
                 options: [],
+                l_id : [],
                 selectedOptions: [],
-                listRegistration: @json($list_registrations),
+                listRegistration: @json($list_registrations->listRegistrationAttribute),
             },
 
             methods: {
                 onchange() {
-                    console.log('hello');
                     setTimeout(function(){
                         var date = document.getElementsByClassName("date");
                         date.nepaliDatePicker({
@@ -122,7 +125,6 @@
 
             mounted() {
                 let vm = this;
-                console.log(vm.value);
                 vm.listRegistration.list_registration_attribute.forEach(setOptions);
                 var date = document.getElementsByClassName("date");
                     date.nepaliDatePicker({
@@ -137,7 +139,8 @@
 
                 function setOptions(item) {
                     vm.options.push(item.name);
-                    console.log(vm.options);
+                    vm.l_id.push(item.id);
+                    console.log(vm.l_id);
                 }
             },
 

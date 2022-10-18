@@ -52,12 +52,14 @@ class ThekkaController extends Controller
 
     public function thekkaOpenSubmit(ThekkaOpenRequest $request)
     {
-        // dd($request->all());
+        contractOpen::query()->where('plan_id', $request->plan_id)->delete();
+
         foreach ($request->name as $key => $value) {
             contractOpen::create([
                 'plan_id' => $request->plan_id,
                 'name' => $request->name[$key],
                 'bank_name' => $request->bank_name[$key],
+                'list_registration_attribute_id' => $request->id[$key],
                 'bank_guarantee_amount' => $request->bank_guarantee_amount[$key],
                 'bank_date' => $request->bank_date[$key],
                 'bail_amount' => $request->bail_amount[$key],
@@ -100,6 +102,7 @@ class ThekkaController extends Controller
                 'plan_id' => $request->plan_id,
                 'contractor_name' => $request->contractor_name[$key],
                 'has_vat' => $request->has_vat[$key],
+                'list_registration_attribute_id' => $request->list_registration_attribute_id[$key],
                 'total_kabol_amount' => $request->total_kabol_amount[$key],
                 'total_amount' => $request->total_amount[$key],
                 'bank_guarantee' => $request->bank_guarantee_amount[$key],

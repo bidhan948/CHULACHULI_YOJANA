@@ -38,7 +38,9 @@
                         @foreach ($contractKabol as $key => $item)
                             <tr>
                                 <th scope="row">{{ $key + 1 }}</th>
-                                <td><input type="text" value="{{ $item->contractor_name }}" name="contractor_name[]" required></td>
+                                <td><input type="text" value="{{ $item->contractor_name }}" name="contractor_name[]" required>
+                                    <input type="hidden" value="{{ $item->list_registration_attribute_id }}" name="list_registration_attribute_id[]">
+                                </td>
                                 <td>
                                     @if ($item->has_vat==1)
                                     <select class="form-select" name="has_vat[]" aria-label="Disabled select example" required>

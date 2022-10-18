@@ -2,8 +2,10 @@
 
 namespace App\Models\YojanaModel;
 
+use App\Models\YojanaModel\setting\list_registration_attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class contractKabol extends Model
 {
@@ -21,7 +23,8 @@ class contractKabol extends Model
         'bank_guarantee',
         'bail_account_amount',
         'is_selected',
-        'date'
+        'date',
+        'list_registration_attribute_id'
     ];
 
     public function plan()
@@ -34,5 +37,8 @@ class contractKabol extends Model
         return $this->belongsTo(contract::class,'plan_id','plan_id');
     }
 
-
+    public function listRegistrationAttribute(): BelongsTo
+    {
+        return $this->belongsTo(list_registration_attribute::class);
+    }
 }

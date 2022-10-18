@@ -56,7 +56,10 @@
                         <tbody>
                             <tr v-for='(namee,index) in originalValues'>
                                 <th scope="row">@{{ index + 1 }}</th>
-                                <td><input type="text" v-model="namee.name" name="name[]" readonly></td>
+                                <td>
+                                    <input type="text" v-model="namee.name" name="name[]" readonly>
+                                    <input type="hidden" v-model="namee.list_registration_attribute_id" name="id[]" readonly>
+                                </td>
                                 <td><input type="text" v-model="namee.bank_name" name="bank_name[]"></td>
                                 <td><input type="number" v-model="namee.bank_guarantee_amount" name="bank_guarantee_amount[]"></td>
                                 <td><input type="text" v-model="namee.bank_date" class="date" name="bank_date[]"></td>

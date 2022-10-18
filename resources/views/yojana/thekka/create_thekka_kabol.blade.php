@@ -38,7 +38,10 @@
                         @foreach ($contract_open as $key => $item)
                             <tr>
                                 <th scope="row">{{ $key + 1 }}</th>
-                                <td><input type="text" value="{{ $item->name }}" name="contractor_name[]"></td>
+                                <td>
+                                    <input type="text" value="{{ $item->name }}" name="contractor_name[]">
+                                    <input type="hidden" value="{{ $item->list_registration_attribute_id }}" name="list_registration_attribute_id[]">
+                                </td>
                                 <td>
                                     <select class="form-select" name="has_vat[]" aria-label="Disabled select example">
                                         <option selected>भ्याट प्रकार</option>
