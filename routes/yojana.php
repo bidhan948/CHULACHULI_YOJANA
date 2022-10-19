@@ -269,6 +269,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('/kul-lagat/update/{kul_lagat}', [KulLagatController::class, 'update'])->name('kul_lagat.update');
             // type bibran route
             Route::get('/plan/type-bibaran/{reg_no}', [TypeController::class, 'index'])->name('plan.consumer-bibaran');
+            Route::get('/plan/upabhokta-samiti/{reg_no}', [ConsumerController::class, 'index'])->name('plan.consumer-bibaran_upabhokta');
             Route::post('/plan/type-bibaran/store', [TypeController::class, 'store'])->name('type.store');
             Route::put('/plan/type-bibaran/update/{type}', [TypeController::class, 'update'])->name('type.update');
             // consumer bibaran
@@ -332,6 +333,7 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('letter/work-order/{reg_no}', [ContractLetterController::class, 'workOrderLetter'])->name('plan.letter.thekka.work_order');
                 Route::get('print/letter/work-order', [ContractLetterController::class, 'printWorkOrderLetter'])->name('print.plan.letter.thekka.work_order');
                 Route::get('letter/agreement/{reg_no}', [ContractLetterController::class, 'agreementLetter'])->name('plan.letter.thekka.agreement');
+                Route::get('print/letter/agreement', [ContractLetterController::class, 'printAgreementLetter'])->name('print.plan.letter.thekka.agreement');
             });
         });
     });

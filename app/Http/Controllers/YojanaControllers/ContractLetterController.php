@@ -7,6 +7,7 @@ use App\Models\PisModel\Staff;
 use App\Models\PisModel\StaffService;
 use App\Models\SharedModel\bank;
 use App\Models\YojanaModel\contractKabol;
+use App\Models\YojanaModel\contractKulLagat;
 use App\Models\YojanaModel\plan;
 use App\Models\YojanaModel\setting\term;
 use Illuminate\Http\Request;
@@ -227,7 +228,7 @@ class ContractLetterController extends Controller
             'contract_kabols' => $contract_kabols,
             'contract_kabol_single' => $contract_kabols->where('is_selected', 1)->first(),
             'date' => $request->date_nep,
-            'engineer' => staff::query()->where('user_id', $request->engineer_id)->first() ? staff::query()->where('user_id', $request->engineer_id)->first() : '' ,
+            'engineer' => staff::query()->where('user_id', $request->engineer_id)->first() ? staff::query()->where('user_id', $request->engineer_id)->first() : '',
         ]);
     }
 
@@ -245,17 +246,66 @@ class ContractLetterController extends Controller
             ->with('listRegistrationAttribute.listRegistration')
             ->get();
 
-        if ($plan == null || !$contract_kabols->count()) {
+        $contract_kul_lagat = contractKulLagat::query()
+            ->where('plan_id', $plan->id)
+            ->with('Unit')
+            ->first();
+
+        if ($plan == null || !$contract_kabols->count() || $contract_kul_lagat == null) {
             Alert::error(config('YojanaMessage.INCOMPLETE_FORM_ERROR'));
             return redirect()->back();
         };
+
         return view('yojana.letter.thekka.agreement_letter', [
             'reg_no' => $reg_no,
             'plan' => $plan,
             'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
             'contract_kabols' => $contract_kabols,
             'contract_kabol_single' => $contract_kabols->where('is_selected', 1)->first(),
-            'term' => term::query()->where('type_id',session('type_id'))->first()
+            'term' => term::query()->where('type_id', session('type_id'))->first(),
+            'contract_kul_lagat' => $contract_kul_lagat
+        ]);
+    }
+
+    public function printAgreementLetter(Request $request)
+    {
+        if ($request->date_nep == '') {
+            toast('मिति अनिवार्य छ', 'error');
+            return redirect()->back();
+        }
+        $plan = plan::query()
+            ->where('id', $request->plan_id)
+            ->whereHas('otherBibaran')
+            ->whereHas('contracts')
+            ->with('otherBibaran', 'contracts')
+            ->first();
+
+        $contract_kabols = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->get();
+
+        $contract_kul_lagat = contractKulLagat::query()
+            ->where('plan_id', $plan->id)
+            ->with('Unit')
+            ->first();
+
+        if ($plan == null || !$contract_kabols->count() || $contract_kul_lagat == null) {
+            Alert::error(config('YojanaMessage.INCOMPLETE_FORM_ERROR'));
+            return redirect()->back();
+        }
+
+        return view('yojana.letter.thekka.print_agreement_letter', [
+            'reg_no' => $plan->reg_no,
+            'plan' => $plan,
+            'date' => $request->date_nep,
+            'ready' => staff::query()->where('user_id', $request->ready)->first(),
+            'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
+            'contract_kabols' => $contract_kabols,
+            'contract_kabol_single' => $contract_kabols->where('is_selected', 1)->first(),
+            'date' => $request->date_nep,
+            'contract_kul_lagat' => $contract_kul_lagat,
+            'term' => term::query()->where('type_id', session('type_id'))->first(),
         ]);
     }
 }

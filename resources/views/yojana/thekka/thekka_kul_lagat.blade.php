@@ -61,7 +61,7 @@
                         </tr>
                         <tr>
                             <td>ठेक्का कबोल गरेको कुल रकम (भ्याट बाहेक) </td>
-                            <td><input class="form-control" value="{{ nepali($contract_kabol->total_kabol_amount) }}"
+                            <td><input class="form-control" value="{{ NepaliAmount($contract_kabol->has_vat == 2 ? $contract_kabol->total_kabol_amount : getPreciseFloat(($contract_kabol->total_kabol_amount/1.13),2) ) }}"
                                     type="text" readonly>
 
                             </td>

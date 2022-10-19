@@ -2,8 +2,10 @@
 
 namespace App\Models\YojanaModel;
 
+use App\Models\SharedModel\SettingValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class contractKulLagat extends Model
 {
@@ -20,6 +22,8 @@ class contractKulLagat extends Model
         'contractor_name'
     ];
 
-
-
+    public function Unit() : BelongsTo
+    {
+        return $this->belongsTo(SettingValue::class,'unit_id','id');
+    }
 }

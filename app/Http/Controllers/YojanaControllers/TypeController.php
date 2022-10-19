@@ -36,8 +36,9 @@ class TypeController extends Controller
                 ->first();
 
             if (session('type_id') == config('TYPE.UPABHOKTA_SAMITI')) {
+                return redirect()->route('plan.consumer-bibaran_upabhokta', ['reg_no' => $reg_no]);
                 return redirect()->action(
-                    [ConsumerController::class, 'index'],
+                    [App\Http\Controllers\YojanaControllers\ConsumerController::class, 'index'],
                     ['reg_no' => $reg_no]
                 );
             } elseif (session('type_id') == config('TYPE.SANSTHA_SAMITI')) {
