@@ -14,8 +14,14 @@ use App\Models\YojanaModel\setting\list_registration;
 use Illuminate\Http\Request;
 use App\Models\SharedModel\Setting;
 use App\Models\SharedModel\SettingValue;
+use App\Models\YojanaModel\advance;
 use App\Models\YojanaModel\contractKulLagat;
+use App\Models\YojanaModel\final_payment;
 use App\Models\YojanaModel\other_bibaran;
+use App\Models\YojanaModel\running_bill_payment;
+use App\Models\YojanaModel\setting\contingency;
+use App\Models\YojanaModel\setting\decimal_point;
+use App\Models\YojanaModel\setting\deduction;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ThekkaController extends Controller
@@ -206,6 +212,41 @@ class ThekkaController extends Controller
             'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
             'contract_kabol' => $contractKabol,
             'other_bibaran' => $other_bibaran
+        ]);
+    }
+
+    public function runningBillPayment($reg_no)
+    {
+        $plan = plan::query()
+            ->where('reg_no', $reg_no)
+            ->with('kulLagat')
+            ->first();
+
+        $running_bill_payment = running_bill_payment::query()
+            ->with('runningBillPaymentDetails.Deduction')
+            ->where('plan_id', $plan->id)
+            ->get();
+
+        $final_payment = final_payment::query()
+            ->where('plan_id', $plan->id)
+            ->first();
+
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
+
+        return view('yojana.thekka.add_running_bill_payment', [
+            'plan' => $plan,
+            'reg_no' => $reg_no,
+            'deductions' => deduction::query()->where('is_active', true)->get(),
+            'advance' => advance::query()->where('plan_id', $plan->id)->first(),
+            'contingency' => contingency::query()->where('fiscal_year_id', getCurrentFiscalYear(true)->id)->first(),
+            'decimal_point' => decimal_point::query()->where('fiscal_year_id', getCurrentFiscalYear(true)->id)->first(),
+            'running_bill_payments' => $running_bill_payment,
+            'is_form' => $final_payment != null ? false : true,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 }
