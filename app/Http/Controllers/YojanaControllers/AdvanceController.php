@@ -95,12 +95,19 @@ class AdvanceController extends Controller
             ->with('otherBibaran')
             ->first();
 
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
+
         return view('yojana.Bhuktani.mayd_thap', [
             'reg_no' => $reg_no,
             'plan' => $plan,
             'add_deadline' => add_deadline::query()
                 ->where('plan_id', $plan->id)
-                ->get()
+                ->get(),
+            'contract_kabol' => $contract_kabol
         ]);
     }
 

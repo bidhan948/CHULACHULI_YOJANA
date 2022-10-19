@@ -229,7 +229,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('print/letter/final-payment-sifaris', [LetterController::class, 'printFinalPaymentSifaris'])->name('plan.print.letter.final_payment_sifaris');
 
             Route::get('print-letter/contract-extension-letter', [LetterController::class, 'printContractExtensionLetter'])->name('plan.letter.printContractExtensionLetter');
-            Route::get('print-letter/contract-extension-letter-2', [LetterController::class, 'printExtensionLetter'])->name('plan.letter.printExtensionLetter');
+            Route::post('print-letter/contract-extension-letter-two', [LetterController::class, 'printExtensionLetter'])->name('plan.letter.printExtensionLetter');
             Route::get('print-letter/mandate-advance-agreement-letter', [LetterController::class, 'printMandateAdvanceAgreementLetter'])->name('plan.print.letter.mandateAdvanceAgreement');
             Route::get('print-letter/peski-account-letter', [LetterController::class, 'printPeskiAccountLetter'])->name('plan.print.letter.peski_account_letter');
             Route::get('print-letter/advance-payment-letter', [LetterController::class, 'printAdvancePaymentLetter'])->name('plan.print.letter.advance_payment_letter');

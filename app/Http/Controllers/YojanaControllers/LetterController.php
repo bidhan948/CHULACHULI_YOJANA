@@ -752,17 +752,17 @@ class LetterController extends Controller
             ->whereHas('otherBibaran')
             ->first();
 
-        if ($plan == null) {
+        $add_deadlines = add_deadline::query()->where('plan_id', $plan->id)->get();
+
+        if ($plan == null || !$add_deadlines->count()) {
             Alert::error(config('YojanaMessage.INCOMPLETE_FORM_ERROR'));
             return redirect()->back();
         }
 
-        $add_deadlines = add_deadline::query()->where('plan_id', $plan->id)->get();
-
         return view('yojana.letter.contract_extension.dashboard', [
             'plan' => $plan,
             'reg_no' => $plan->reg_no,
-            'add_deadlines' => $add_deadlines
+            'add_deadlines' => $add_deadlines,
         ]);
     }
 
@@ -789,11 +789,18 @@ class LetterController extends Controller
             return redirect()->back();
         }
 
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
+
         return view('yojana.letter.contract_extension.contract_extension_letter', [
             'add_deadline' => $add_deadline,
             'plan' => $plan,
             'reg_no' => $plan->reg_no,
-            'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get()
+            'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
@@ -824,7 +831,11 @@ class LetterController extends Controller
             Alert::error(config('YojanaMessage.INCOMPLETE_FORM_ERROR'));
             return redirect()->back();
         }
-
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
         $readyPosition = StaffService::query()->where('user_id', $request->ready)->first();
         $presentPosition = StaffService::query()->where('user_id', $request->present)->first();
         $approvePosition = StaffService::query()->where('user_id', $request->approve)->first();
@@ -840,6 +851,7 @@ class LetterController extends Controller
             'present_post' => $presentPosition == null ? '' : getSettingValueById($presentPosition->position)->name,
             'approve' => staff::query()->where('user_id', $request->approve)->first(),
             'approve_post' => $approvePosition == null ? '' : getSettingValueById($approvePosition->position)->name,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
@@ -860,7 +872,7 @@ class LetterController extends Controller
         return view('yojana.letter.contract_extension.dashboard_extension_letter', [
             'plan' => $plan,
             'reg_no' => $plan->reg_no,
-            'add_deadlines' => $add_deadlines
+            'add_deadlines' => $add_deadlines,
         ]);
     }
 
@@ -868,10 +880,6 @@ class LetterController extends Controller
     {
         if ($request->add_deadline_id == '') {
             Alert::error("पत्र छान्नुहोस्");
-            return redirect()->back();
-        }
-        if ($request->date_nep == '') {
-            toast('मिति अनिवार्य छ', 'error');
             return redirect()->back();
         }
 
@@ -895,6 +903,11 @@ class LetterController extends Controller
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
 
         if ($relationName != '') {
             $details = $type->typeable_type::query()
@@ -913,16 +926,12 @@ class LetterController extends Controller
             'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
             'details' => $details ?? [],
             'type' => $type,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
     public function printExtensionLetter(Request $request, YojanaHelper $helper)
     {
-        if ($request->add_deadline_id == '') {
-            Alert::error("पत्र छान्नुहोस्");
-            return redirect()->back();
-        }
-
         if ($request->date_nep == '') {
             toast('मिति अनिवार्य छ', 'error');
             return redirect()->back();
@@ -937,12 +946,17 @@ class LetterController extends Controller
             ->first();
 
         $add_deadline = add_deadline::query()->where('id', $request->add_deadline_id)->first();
-
+        
         if ($plan == null || $add_deadline == null) {
             Alert::error(config('YojanaMessage.INCOMPLETE_FORM_ERROR'));
             return redirect()->back();
         }
 
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
         $readyPosition = StaffService::query()->where('user_id', $request->ready)->first();
         $presentPosition = StaffService::query()->where('user_id', $request->present)->first();
         $approvePosition = StaffService::query()->where('user_id', $request->approve)->first();
@@ -972,6 +986,7 @@ class LetterController extends Controller
             'approve_post' => $approvePosition == null ? '' : getSettingValueById($approvePosition->position)->name,
             'details' => $details ?? [],
             'type' => $type,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
