@@ -7,6 +7,7 @@ use App\Http\Requests\YojanaRequest\MyadThapRequest;
 use App\Http\Requests\YojanaRequest\PeskiBhuktaniRequest;
 use App\Models\YojanaModel\add_deadline;
 use App\Models\YojanaModel\advance;
+use App\Models\YojanaModel\contractKabol;
 use App\Models\YojanaModel\final_payment;
 use App\Models\YojanaModel\plan;
 use App\Models\YojanaModel\running_bill_payment;
@@ -19,12 +20,14 @@ class AdvanceController extends Controller
 {
     public function planDashboard($reg_no): View
     {
+        $plan =  plan::query()
+            ->select('id', 'reg_no', 'name')
+            ->where('reg_no', $reg_no)
+            ->first();
+
         return view('yojana.Bhuktani.bhuktani_dashboard', [
             'reg_no' => $reg_no,
-            'plan' => plan::query()
-                ->select('id', 'reg_no', 'name')
-                ->where('reg_no', $reg_no)
-                ->first()
+            'plan' => $plan
         ]);
     }
 
@@ -48,11 +51,17 @@ class AdvanceController extends Controller
             ->where('plan_id', $plan->id)
             ->first();
 
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->first();
+
         return view('yojana.Bhuktani.peski_bhuktani', [
             'reg_no' => $reg_no,
             'plan' => $plan,
             'advance' => $advance,
-            'show_form' => ($running_bill_payment == null ? ($final_payment == null ? false : true) : false)
+            'show_form' => ($running_bill_payment == null ? ($final_payment == null ? false : true) : false),
+            'contract_kabol' => $contract_kabol
         ]);
     }
 

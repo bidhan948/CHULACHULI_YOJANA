@@ -36,18 +36,20 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="col-3">
-                        <ul class="users-list clearfix">
-                            <li class="card shadow-lg" style="width:100%;">
-                                <div class="d-flex justify-content-center">
-                                    <img src="{{ asset('yojana/pen-icon.png') }}" alt="User Image" class="img-fluid"
-                                        width="50">
-                                </div>
-                                <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{ route('plan.letter.peski_account_letter', $reg_no) }}">{{ __('आर्थिक प्रशासन शाखा पत्र') }}</a>
-                            </li>
-                        </ul>
-                    </div>
+                    @if (session('type_id') != config('TYPE.CONTRACT_MARFAT'))
+                        <div class="col-3">
+                            <ul class="users-list clearfix">
+                                <li class="card shadow-lg" style="width:100%;">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="{{ asset('yojana/pen-icon.png') }}" alt="User Image" class="img-fluid"
+                                            width="50">
+                                    </div>
+                                    <a class="users-list-name mt-3 font-weight-bold"
+                                        href="{{ route('plan.letter.peski_account_letter', $reg_no) }}">{{ __('आर्थिक प्रशासन शाखा पत्र') }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

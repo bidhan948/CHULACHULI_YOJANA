@@ -10,6 +10,7 @@ use App\Models\SharedModel\bank;
 use App\Models\YojanaModel\add_deadline;
 use App\Models\YojanaModel\advance;
 use App\Models\YojanaModel\anugaman_plan;
+use App\Models\YojanaModel\contractKabol;
 use App\Models\YojanaModel\final_payment;
 use App\Models\YojanaModel\plan;
 use App\Models\YojanaModel\running_bill_payment;
@@ -254,7 +255,7 @@ class LetterController extends Controller
             'contingency_sum' => ($helper->sumOfContingencyAmount($plan->id))->sum(),
             'approve' => staff::query()->where('user_id', $request->approve)->first(),
             'approve_post' => $approvePosition == null ? '' : getSettingValueById($approvePosition->position)->name,
-            'engineer' => staff::query()->where('user_id', $request->engineer_id)->first() ? staff::query()->where('user_id', $request->engineer_id)->first() : '' ,
+            'engineer' => staff::query()->where('user_id', $request->engineer_id)->first() ? staff::query()->where('user_id', $request->engineer_id)->first() : '',
             'date' => $request->date_nep
         ]);
     }
@@ -265,11 +266,11 @@ class LetterController extends Controller
             ->where('reg_no', $reg_no)
             ->whereHas('otherBibaran')
             ->with('kulLagat', 'otherBibaran.otherBibaranDetail.Staff', 'otherBibaran.otherBibaranDetail.staffServices', 'planWardDetails')
-            ->with('otherBibaran.otherBibaranDetail',function($q){
-                $q->orderBy('id','asc');
+            ->with('otherBibaran.otherBibaranDetail', function ($q) {
+                $q->orderBy('id', 'asc');
             })
             ->first();
-            
+
 
         if ($plan == null) {
             Alert::error(config('YojanaMessage.INCOMPLETE_FORM_ERROR'));
@@ -285,14 +286,14 @@ class LetterController extends Controller
             ->first();
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
-        
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
         return view('yojana.letter.letter_contract_letter', [
@@ -319,8 +320,8 @@ class LetterController extends Controller
             ->where('reg_no', $request->plan_id)
             ->whereHas('otherBibaran')
             ->with('kulLagat', 'otherBibaran.otherBibaranDetail.Staff', 'otherBibaran.otherBibaranDetail.staffServices', 'planWardDetails')
-                        ->with('otherBibaran.otherBibaranDetail',function($q){
-                $q->orderBy('id','asc');
+            ->with('otherBibaran.otherBibaranDetail', function ($q) {
+                $q->orderBy('id', 'asc');
             })
             ->first();
 
@@ -335,11 +336,11 @@ class LetterController extends Controller
 
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
@@ -411,18 +412,24 @@ class LetterController extends Controller
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-       
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
         $advance = advance::query()->where('plan_id', $plan->id)->first();
+
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
 
         return view('yojana.letter.advance_agreement.advance_payment_letter', [
             'plan' => $plan,
@@ -431,7 +438,8 @@ class LetterController extends Controller
             'relationName' => $relationName,
             'details' => $details ?? [],
             'type' => $type,
-            'advance' => $advance
+            'advance' => $advance,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
@@ -466,18 +474,22 @@ class LetterController extends Controller
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-       
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
-
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
 
         $readyPosition = StaffService::query()->where('user_id', $request->ready)->first();
         $presentPosition = StaffService::query()->where('user_id', $request->present)->first();
@@ -496,7 +508,8 @@ class LetterController extends Controller
             'details' => $details ?? [],
             'type' => $type,
             'advance' => $advance,
-            'date' => $request->date_nep
+            'date' => $request->date_nep,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
@@ -527,17 +540,17 @@ class LetterController extends Controller
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-        
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
-        
+
         return view('yojana.letter.advance_agreement.account_letter', [
             'plan' => $plan,
             'reg_no' => $reg_no,
@@ -585,14 +598,14 @@ class LetterController extends Controller
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-        
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
@@ -643,14 +656,14 @@ class LetterController extends Controller
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-       
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
@@ -701,14 +714,14 @@ class LetterController extends Controller
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-       
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
@@ -882,17 +895,17 @@ class LetterController extends Controller
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-        
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
-        
+
         return view('yojana.letter.contract_extension.extension_letter', [
             'add_deadline' => $add_deadline,
             'plan' => $plan,
@@ -1033,7 +1046,7 @@ class LetterController extends Controller
         if ($relationName != '') {
             $details = $type->typeable->load($relationName);
         }
-        
+
         $bank = bank::all();
 
 
@@ -1075,14 +1088,14 @@ class LetterController extends Controller
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-        
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
         $running_bill_payment = running_bill_payment::query()->where('id', $request->running_bill_payment_id)->first();
@@ -1091,8 +1104,8 @@ class LetterController extends Controller
             Alert::error(config('YojanaMessage.CLIENT_ERROR'));
             return redirect()->back();
         }
-        $bank = Bank::query()->where('id',$request->bank_id)->first();
-        
+        $bank = Bank::query()->where('id', $request->bank_id)->first();
+
         return view('yojana.letter.running_bill_payment.print_running_bill_payment_letter', [
             'plan' => $plan,
             'reg_no' => $plan->reg_no,
@@ -1139,14 +1152,14 @@ class LetterController extends Controller
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-        
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
@@ -1186,14 +1199,14 @@ class LetterController extends Controller
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-       
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
         $running_bill_payment = running_bill_payment::query()->where('id', $request->running_bill_payment_id)->first();
@@ -1243,7 +1256,7 @@ class LetterController extends Controller
             ->where('reg_no', $reg_no)
             ->whereHas('otherBibaran')
             ->whereHas('finalPayment')
-            ->with('kulLagat', 'otherBibaran','budgetSourcePlanDetails.budgetSources','planAllocation','planWardDetails')
+            ->with('kulLagat', 'otherBibaran', 'budgetSourcePlanDetails.budgetSources', 'planAllocation', 'planWardDetails')
             ->first();
 
         $bank = bank::all();
@@ -1266,14 +1279,14 @@ class LetterController extends Controller
         $type = type::query()->where('plan_id', $plan->id)->first();
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-       
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
@@ -1300,9 +1313,9 @@ class LetterController extends Controller
             ->where('reg_no', $request->plan_id)
             ->whereHas('otherBibaran')
             ->whereHas('finalPayment')
-            ->with('kulLagat', 'otherBibaran','budgetSourcePlanDetails.budgetSources','planAllocation')
+            ->with('kulLagat', 'otherBibaran', 'budgetSourcePlanDetails.budgetSources', 'planAllocation')
             ->first();
-        $bank = bank::query()->where('id',$request->bank_id)->first();
+        $bank = bank::query()->where('id', $request->bank_id)->first();
 
         $add_deadline = add_deadline::query()
             ->where('plan_id', $plan->id)
@@ -1322,14 +1335,14 @@ class LetterController extends Controller
         $type = type::query()->where('plan_id', $plan->id)->first();
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-        
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
@@ -1356,16 +1369,16 @@ class LetterController extends Controller
             'bhuktani_name' => $request->bhuktani_name
         ]);
     }
-    
+
     public function finalAccountPaymentLetter($reg_no, YojanaHelper $helper)
     {
         $plan = plan::query()
             ->where('reg_no', $reg_no)
             ->whereHas('otherBibaran')
             ->whereHas('finalPayment')
-            ->with('kulLagat', 'otherBibaran','budgetSourcePlanDetails.budgetSources','planAllocation')
+            ->with('kulLagat', 'otherBibaran', 'budgetSourcePlanDetails.budgetSources', 'planAllocation')
             ->first();
-        
+
         $bank = bank::all();
 
         $add_deadline = add_deadline::query()
@@ -1386,18 +1399,18 @@ class LetterController extends Controller
         $type = type::query()->where('plan_id', $plan->id)->first();
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-       
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
-        
-                return view('yojana.letter.payment-letter.final_account_payment_letter', [
+
+        return view('yojana.letter.payment-letter.final_account_payment_letter', [
             'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
             'plan' => $plan,
             'reg_no' => $reg_no,
@@ -1408,7 +1421,7 @@ class LetterController extends Controller
             'bank' => $bank
         ]);
     }
-    
+
     public function printFinalAccountPaymentLetter(Request $request, YojanaHelper $helper)
     {
         if ($request->date_nep == '') {
@@ -1422,7 +1435,7 @@ class LetterController extends Controller
             ->whereHas('finalPayment')
             ->with('kulLagat', 'otherBibaran')
             ->first();
-        $bank = bank::query()->where('id',$request->bank_id)->first();
+        $bank = bank::query()->where('id', $request->bank_id)->first();
 
         $add_deadline = add_deadline::query()
             ->where('plan_id', $plan->id)
@@ -1442,14 +1455,14 @@ class LetterController extends Controller
         $type = type::query()->where('plan_id', $plan->id)->first();
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-        
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
@@ -1474,21 +1487,20 @@ class LetterController extends Controller
             'bank' => $bank,
             'acc_no' => $request->acc_no,
             'bhuktani_name' => $request->bhuktani_name
-        ]);    
-        
+        ]);
     }
-    
+
     public function contractSifarishLetter($reg_no, YojanaHelper $helper)
     {
         $plan = plan::query()
             ->where('reg_no', $reg_no)
             ->whereHas('otherBibaran')
             ->with('kulLagat', 'otherBibaran.otherBibaranDetail.Staff', 'otherBibaran.otherBibaranDetail.staffServices', 'planWardDetails')
-            ->with('otherBibaran.otherBibaranDetail',function($q){
-                $q->orderBy('id','asc');
+            ->with('otherBibaran.otherBibaranDetail', function ($q) {
+                $q->orderBy('id', 'asc');
             })
             ->first();
-            
+
 
 
         if ($plan == null) {
@@ -1505,14 +1517,14 @@ class LetterController extends Controller
             ->first();
 
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
-        
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
         return view('yojana.letter.contract_letter_sifarish', [
@@ -1526,7 +1538,7 @@ class LetterController extends Controller
             'htmlTypeTableRow' => $htmlTypeTableRow ?? '',
             'anugamanPlan' => $anugamanPlan
         ]);
-        
+
         // return view('yojana.letter.contract_letter_sifarish', [
         //     'reg_no' => $reg_no,
         //     'plan' => $plan,
@@ -1539,10 +1551,10 @@ class LetterController extends Controller
         //     'anugamanPlan' => $anugamanPlan
         // ]);
     }
-    
+
     public function printContractSifarishLetter(Request $request, YojanaHelper $helper)
     {
-                if ($request->date_nep == '') {
+        if ($request->date_nep == '') {
             toast('मिति अनिवार्य छ', 'error');
             return redirect()->back();
         }
@@ -1551,8 +1563,8 @@ class LetterController extends Controller
             ->where('reg_no', $request->plan_id)
             ->whereHas('otherBibaran')
             ->with('kulLagat', 'otherBibaran.otherBibaranDetail.Staff', 'otherBibaran.otherBibaranDetail.staffServices', 'planWardDetails')
-                        ->with('otherBibaran.otherBibaranDetail',function($q){
-                $q->orderBy('id','asc');
+            ->with('otherBibaran.otherBibaranDetail', function ($q) {
+                $q->orderBy('id', 'asc');
             })
             ->first();
 
@@ -1567,11 +1579,11 @@ class LetterController extends Controller
 
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
@@ -1603,26 +1615,25 @@ class LetterController extends Controller
             'anugamanPlan' => $anugamanPlan
         ]);
     }
-    
+
     public function recommendationDashboard($reg_no)
     {
-         $plan = plan::query()
+        $plan = plan::query()
             ->where('reg_no', $reg_no)
             ->first();
-            
+
         return view('yojana.letter.sifaris.dashboard', [
             'reg_no' => $plan->reg_no,
             'plan' => $plan,
         ]);
-        
     }
-    
+
     public function mulyankanSifarisLetter($reg_no, YojanaHelper $helper)
     {
         $plan = plan::query()
             ->where('reg_no', $reg_no)
             ->whereHas('otherBibaran')
-            ->with('kulLagat', 'otherBibaran','budgetSourcePlanDetails.budgetSources','planAllocation')
+            ->with('kulLagat', 'otherBibaran', 'budgetSourcePlanDetails.budgetSources', 'planAllocation')
             ->first();
 
         if ($plan == null) {
@@ -1633,17 +1644,17 @@ class LetterController extends Controller
         $type = type::query()->where('plan_id', $plan->id)->first();
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-       
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
-        
+
         return view('yojana.letter.sifaris.mulyankan_sifaris', [
             'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
             'plan' => $plan,
@@ -1652,10 +1663,10 @@ class LetterController extends Controller
             'type' => $type
         ]);
     }
-    
+
     public function printMulyankanSifarisLetter(Request $request, YojanaHelper $helper)
     {
-         if ($request->date_nep == '') {
+        if ($request->date_nep == '') {
             toast('मिति अनिवार्य छ', 'error');
             return redirect()->back();
         }
@@ -1674,14 +1685,14 @@ class LetterController extends Controller
         $type = type::query()->where('plan_id', $plan->id)->first();
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-        
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
@@ -1701,15 +1712,15 @@ class LetterController extends Controller
             'approve_post' => $approvePosition == null ? '' : getSettingValueById($approvePosition->position)->name,
             'details' => $details ?? [],
             'type' => $type,
-        ]);  
+        ]);
     }
-    
+
     public function finalPaymentSifaris($reg_no, YojanaHelper $helper)
     {
-         $plan = plan::query()
+        $plan = plan::query()
             ->where('reg_no', $reg_no)
             ->whereHas('otherBibaran')
-            ->with('kulLagat', 'otherBibaran','budgetSourcePlanDetails.budgetSources','planAllocation')
+            ->with('kulLagat', 'otherBibaran', 'budgetSourcePlanDetails.budgetSources', 'planAllocation')
             ->first();
 
         if ($plan == null) {
@@ -1720,17 +1731,17 @@ class LetterController extends Controller
         $type = type::query()->where('plan_id', $plan->id)->first();
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-       
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
-        
+
         return view('yojana.letter.sifaris.antim_sifaris', [
             'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
             'plan' => $plan,
@@ -1739,10 +1750,10 @@ class LetterController extends Controller
             'type' => $type
         ]);
     }
-    
+
     public function printFinalPaymentSifaris(Request $request, YojanaHelper $helper)
     {
-           if ($request->date_nep == '') {
+        if ($request->date_nep == '') {
             toast('मिति अनिवार्य छ', 'error');
             return redirect()->back();
         }
@@ -1761,14 +1772,14 @@ class LetterController extends Controller
         $type = type::query()->where('plan_id', $plan->id)->first();
         $relationName = $helper->getRelationNameViaSession(session('type_id'));
 
-        
+
         if ($relationName != '') {
             $details = $type->typeable_type::query()
-            ->where('id',$type->typeable_id)
-            ->with($relationName,function($q){
-                $q->orderBy('id');
-            })
-            ->first();
+                ->where('id', $type->typeable_id)
+                ->with($relationName, function ($q) {
+                    $q->orderBy('id');
+                })
+                ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
@@ -1788,6 +1799,6 @@ class LetterController extends Controller
             'approve_post' => $approvePosition == null ? '' : getSettingValueById($approvePosition->position)->name,
             'details' => $details ?? [],
             'type' => $type,
-        ]);  
+        ]);
     }
 }
