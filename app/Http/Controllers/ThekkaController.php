@@ -14,9 +14,11 @@ use App\Models\YojanaModel\setting\list_registration;
 use Illuminate\Http\Request;
 use App\Models\SharedModel\Setting;
 use App\Models\SharedModel\SettingValue;
+use App\Models\YojanaModel\add_deadline;
 use App\Models\YojanaModel\advance;
 use App\Models\YojanaModel\contractKulLagat;
 use App\Models\YojanaModel\final_payment;
+use App\Models\YojanaModel\final_payment_detail;
 use App\Models\YojanaModel\other_bibaran;
 use App\Models\YojanaModel\running_bill_payment;
 use App\Models\YojanaModel\running_bill_payment_detail;
@@ -288,8 +290,99 @@ class ThekkaController extends Controller
             }
             DB::commit();
         } catch (Exception $e) {
-            // Alert::error("Something went wrong...");
             DB::rollBack();
+            Alert::error($e->getMessage());
+            return redirect()->back();
+        }
+        toast("मुल्यांकन को आधारमा भुक्तानी हाल्न सफल ", "success");
+        return redirect()->back();
+    }
+
+    public function finalPayment($reg_no)
+    {
+        $plan = plan::query()
+            ->where('reg_no', $reg_no)
+            ->whereHas('otherBibaran')
+            ->with('otherBibaran')
+            ->first();
+
+        if ($plan == null) {
+            Alert::error(config('YojanaMessage.INCOMPLETE_FORM_ERROR'));
+            return redirect()->back();
+        }
+
+        $add_deadline = add_deadline::query()
+            ->where('plan_id', $plan->id)
+            ->latest()
+            ->first();
+
+        $latest_running_bill = running_bill_payment::query()
+            ->where('plan_id', $plan->id)
+            ->latest()
+            ->first();
+
+        $running_bills = running_bill_payment::query()
+            ->where('plan_id', $plan->id)
+            ->get();
+
+        $final_payment = final_payment::query()
+            ->where('plan_id', $plan->id)
+            ->with('finalPaymentDeatils.Deduction')
+            ->first();
+
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
+        return view('yojana.thekka.final_payment', [
+            'plan' => $plan,
+            'reg_no' => $plan->reg_no,
+            'deductions' => deduction::query()->where('is_active', true)->get(),
+            'plan_end_date_check' => $add_deadline == null ? $plan->otherBibaran->end_date : $add_deadline->period_add_date_nep,
+            'plan_own_evaluation_amount_from_running_bill' => $latest_running_bill == null ? 0 : $latest_running_bill->plan_own_evaluation_amount,
+            'advance' => advance::query()->where('plan_id', $plan->id)->first(),
+            'sum_running_bill_payable_amount' => running_bill_payment::query()->where('plan_id', $plan->id)->sum('payable_amount'),
+            'bhuktani_amount' => ($contract_kabol->total_amount) - ($running_bills->sum('payable_amount')),
+            'decimal_point' => decimal_point::query()->where('fiscal_year_id', getCurrentFiscalYear(true)->id)->first(),
+            'running_bill_payments' => $running_bills,
+            'final_payment' => $final_payment,
+            'contract_kabol' => $contract_kabol
+        ]);
+    }
+
+    public function finalPaymentStore(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $plan = plan::query()
+                ->where('id', $request->plan_id)
+                ->with('kulLagat', 'otherBibaran')
+                ->first();
+
+            $running_bill_payment = running_bill_payment::query()->where('plan_id', $request->plan_id)->get();
+
+            $final_payment = final_payment::create($request->all() + [
+                'fiscal_id' => getCurrentFiscalYear(true)->id,
+                'ip' => $request->ip(),
+                'type_id' => session('type_id'),
+                'advance_payment' => $running_bill_payment->count() ? 0 : $request->advance_payment
+            ]);
+
+            if ($request->has('deduction')) {
+                foreach ($request->deduction as $key => $deduction) {
+                    final_payment_detail::create([
+                        'plan_id' => $plan->id,
+                        'final_payment_id' => $final_payment->id,
+                        'deduction_id' => $key,
+                        'deduction_amount' => $deduction
+                    ]);
+                }
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            // Alert::error('Something went wrong...');
             Alert::error($e->getMessage());
             return redirect()->back();
         }

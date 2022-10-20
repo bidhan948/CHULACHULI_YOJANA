@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class final_payment_detail extends Model
 {
     use HasFactory;
+    protected $connection = 'mysql_yojana';
 
     protected $fillable = [
         'plan_id',

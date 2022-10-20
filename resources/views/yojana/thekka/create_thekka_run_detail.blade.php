@@ -185,7 +185,7 @@
                                                     class="text-danger font-weight-bold px-1">*</span></span>
                                         </div>
                                         <input type="text"
-                                            class="form-control form-control-sm number @error('venue') is-invalid @enderror"
+                                            class="form-control form-control-sm @error('venue') is-invalid @enderror"
                                             name="venue" required>
                                         @error('venue')
                                             <p class="invalid-feedback" style="font-size: 0.9rem">

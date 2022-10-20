@@ -57,7 +57,7 @@
                                         width="50">
                                 </div>
                                 <a class="users-list-name mt-3 font-weight-bold"
-                                    href="{{ route('plan.final_payment.index', $reg_no) }}">{{ __('अन्तिम भुक्तानी') }}</a>
+                                    href="{{ route( session('type_id') != config('TYPE.CONTRACT_MARFAT') ? 'plan.final_payment.index' : 'plan.thekka.final_payment' , $reg_no) }}">{{ __('अन्तिम भुक्तानी') }}</a>
                             </li>
                         </ul>
                     </div>

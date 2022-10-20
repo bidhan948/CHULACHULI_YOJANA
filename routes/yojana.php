@@ -321,12 +321,14 @@ Route::group(['middleware' => 'auth'], function () {
 
             Route::get('thekka-boli/{reg_no}', [ThekkaController::class, 'thekkaboli'])->name('thekka-boli');
             Route::post('thekka-boli-submit', [ThekkaController::class, 'thekkaBoliSubmit'])->name('thekka-boli-submit');
-            
+
             Route::post('thekka-kul-lagat-submit', [ThekkaController::class, 'thekkaKulLagatSubmit'])->name('thekka-kul-lagat-submit');
-            
+
             // thekka payment letter
             Route::get('thekka-running-bill-payment/{reg_no}', [ThekkaController::class, 'runningBillPayment'])->name('plan.running_bill_payment.thekka.running_bill_payment');
             Route::post('thekka-running-bill-payment', [ThekkaController::class, 'runningBillPaymentStore'])->name('plan.thekka.running_bill_payment.store');
+            Route::get('thekka-final-payment/{reg_no}', [ThekkaController::class, 'finalPayment'])->name('plan.thekka.final_payment');
+            Route::post('thekka-final-bill-payment', [ThekkaController::class, 'finalPaymentStore'])->name('plan.thekka.final_payment_store');
             // thekka route
             Route::prefix('thekka')->group(function () {
                 Route::get('letter/contract/{reg_no}', [ContractLetterController::class, 'thekkaContractLetter'])->name('plan.letter.thekka.contract');
