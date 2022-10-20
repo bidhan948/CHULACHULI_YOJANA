@@ -19,9 +19,12 @@ use App\Models\YojanaModel\contractKulLagat;
 use App\Models\YojanaModel\final_payment;
 use App\Models\YojanaModel\other_bibaran;
 use App\Models\YojanaModel\running_bill_payment;
+use App\Models\YojanaModel\running_bill_payment_detail;
 use App\Models\YojanaModel\setting\contingency;
 use App\Models\YojanaModel\setting\decimal_point;
 use App\Models\YojanaModel\setting\deduction;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ThekkaController extends Controller
@@ -236,7 +239,6 @@ class ThekkaController extends Controller
             ->where('is_selected', 1)
             ->with('listRegistrationAttribute.listRegistration')
             ->first();
-
         return view('yojana.thekka.add_running_bill_payment', [
             'plan' => $plan,
             'reg_no' => $reg_no,
@@ -248,5 +250,50 @@ class ThekkaController extends Controller
             'is_form' => $final_payment != null ? false : true,
             'contract_kabol' => $contract_kabol
         ]);
+    }
+
+    public function runningBillPaymentStore(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $running_bill_payment = running_bill_payment::query()
+                ->where('plan_id', $request->plan_id)
+                ->get();
+
+            $plan = plan::query()
+                ->where('id', $request->plan_id)
+                ->with('kulLagat')
+                ->first();
+            $running_bill_payment_latest = running_bill_payment::create($request->except(
+                'deduction_percent',
+                'deduction',
+                'plan_own_evaluation_amount'
+            ) + [
+                'period' => $running_bill_payment->count() + 1,
+                'ip' => $request->ip(),
+                'plan_own_evaluation_amount' => $request->plan_evaluation_amount + $running_bill_payment->sum('plan_evaluation_amount'),
+                'type_id' => session('type_id')
+            ]);
+
+            foreach ($request->deduction as $key => $amount) {
+                running_bill_payment_detail::create(
+                    [
+                        'plan_id' => $request->plan_id,
+                        'running_bill_payment_id' => $running_bill_payment_latest->id,
+                        'deduction_id' => $key,
+                        'deduction_amount' => $amount,
+                    ]
+                );
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            // Alert::error("Something went wrong...");
+            DB::rollBack();
+            Alert::error($e->getMessage());
+            return redirect()->back();
+        }
+        toast("मुल्यांकन को आधारमा भुक्तानी हाल्न सफल ", "success");
+        return redirect()->back();
     }
 }

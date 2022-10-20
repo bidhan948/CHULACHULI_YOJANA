@@ -96,7 +96,7 @@
                                                                 @foreach ($running_bill_payment->runningBillPaymentDetails as $detail)
                                                                     <tr>
                                                                         <th class="text-center">
-                                                                            {{ $detail->Deduction->name ." :"}}</th>
+                                                                            {{ $detail->Deduction->name . ' :' }}</th>
                                                                         <td>{{ NepaliAmount($detail->deduction_amount) . '(' . Nepali($detail->deduction_percent) . ' %)' }}
                                                                         </td>
                                                                     </tr>
@@ -115,7 +115,8 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <th class="text-center">
-                                                                        {{ __('मुल्यांकनको आधारमा भुक्तानी भएको मिति :') }}</th>
+                                                                        {{ __('मुल्यांकनको आधारमा भुक्तानी भएको मिति :') }}
+                                                                    </th>
                                                                     <td>{{ Nepali($running_bill_payment->bill_payable_date) }}
                                                                     </td>
                                                                 </tr>
@@ -133,7 +134,7 @@
                             <p class="my-2 p-1 bg-primary text-center">
                                 {{ $running_bill_payments->count() == 0 ? 'पहिलो' : convertNumberToNepaliWord($running_bill_payments->last()->period + 1) }}
                                 भुक्तानी भर्नुहोस्</p>
-                            <form method="POST" action="{{ route('plan.running_bill_payment.store') }}">
+                            <form method="POST" action="{{ route('plan.thekka.running_bill_payment.store') }}">
                                 @csrf
                                 <div class="row">
                                     <input type="hidden" name="plan_id" value="{{ $plan->id }}">
@@ -178,8 +179,7 @@
                                                     <td class="text-center">
                                                         <input type="text" name="est_amount"
                                                             class="form-control amount form-control-sm @error('est_amount') is-invalid @enderror"
-                                                            value="{{ $contract_kabol->total_amount }}" required
-                                                            readonly>
+                                                            value="{{ $contract_kabol->total_amount }}" required readonly>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -234,27 +234,16 @@
                                                             readonly>
                                                     </td>
                                                     <td class="text-center">
-                                                        <input type="text" id="contingency_percent"
-                                                            class="form-control form-control-sm "
-                                                            value="{{ $contingency == null ? 0 . '%' : $contingency->percent . '%' }}"
-                                                            disabled required>
                                                         <input type="text" id="contingency_amount"
                                                             class="form-control amount my-1 sum_calc deduction_a auto_calculate form-control-sm @error('contingency_amount') is-invalid @enderror"
-                                                            name="contingency_amount" value="0" readonly required>
+                                                            name="contingency_amount" value="0"required>
                                                     </td>
                                                     @foreach ($deductions as $key => $deduction)
                                                         <td class="text-center">
                                                             <input type="text"
-                                                                class="form-control amount deduction form-control-sm"
-                                                                id="deduction_percent_{{ $key }}"
-                                                                name="deduction_percent[{{ $deduction->id }}]"
-                                                                value="{{ $deduction->percent }}"
-                                                                oninput="caculateRunningBillPercent({{ $key }})">
-                                                            <input type="text"
                                                                 class="form-control amount sum_calc auto_calculate deduction_a my-1 form-control-sm"
                                                                 id="deduction_amount_{{ $key }}"
-                                                                name="deduction[{{ $deduction->id }}]" value=""
-                                                                readonly>
+                                                                name="deduction[{{ $deduction->id }}]" value="0">
                                                         </td>
                                                     @endforeach
                                                 </tr>
@@ -311,6 +300,7 @@
     <script src="http://nepalidatepicker.sajanmaharjan.com.np/nepali.datepicker/js/nepali.datepicker.v3.7.min.js"
         type="text/javascript"></script>
     <script>
+        let decimal = +{{ $decimal_point->name }};
         window.onload = function() {
             var date_fields = document.getElementsByClassName("nepali-date");
             for (let index = 0; index < date_fields.length; index++) {
@@ -324,7 +314,7 @@
                 });
             }
         };
-        $(function(){
+        $(function() {
             $("#plan_evaluation_amount").on("input", function() {
                 var plan_evaluation_amount = +$("#plan_evaluation_amount").val() || 0;
                 var plan_id = {{ $plan->id }};
@@ -341,7 +331,26 @@
                     console.log(error);
                 });
             });
+            $(".deduction_a").on("input", function() {
+                deduction_a = 0;
+                $('.deduction_a').each(function() {
+                    deduction_a += Number($(this).val()) || 0;
+                });
+                payable_amount = +$("#payable_amount").val();
+                $("#total_katti_amount").val(deduction_a.toFixed(decimal));
+                $("#total_paid_amount").val((payable_amount - deduction_a).toFixed(decimal));
+            });
+
+            $("#payable_amount").on("input", function() {
+                payable_amount = $("#payable_amount").val() || 0;
+                deduction_a = 0;
+                $('.deduction_a').each(function() {
+                    deduction_a += Number($(this).val()) || 0;
+                });
+                $("#total_paid_amount").val(payable_amount - deduction_a);
+            });
         });
+
         function submitForm() {
             if (confirm('के तपाई निश्चित हुनुहुन्छ ?')) {
                 var plan_own_evaluation_amount = +$("#plan_own_evaluation_amount").val();
