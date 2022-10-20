@@ -946,7 +946,7 @@ class LetterController extends Controller
             ->first();
 
         $add_deadline = add_deadline::query()->where('id', $request->add_deadline_id)->first();
-        
+
         if ($plan == null || $add_deadline == null) {
             Alert::error(config('YojanaMessage.INCOMPLETE_FORM_ERROR'));
             return redirect()->back();
@@ -1063,7 +1063,11 @@ class LetterController extends Controller
         }
 
         $bank = bank::all();
-
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
 
         return view('yojana.letter.running_bill_payment.running_bill_payment_letter', [
             'plan' => $plan,
@@ -1072,7 +1076,8 @@ class LetterController extends Controller
             'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
             'details' => $details ?? [],
             'type' => $type,
-            'bank' => $bank
+            'bank' => $bank,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
@@ -1121,6 +1126,12 @@ class LetterController extends Controller
         }
         $bank = Bank::query()->where('id', $request->bank_id)->first();
 
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
+
         return view('yojana.letter.running_bill_payment.print_running_bill_payment_letter', [
             'plan' => $plan,
             'reg_no' => $plan->reg_no,
@@ -1136,6 +1147,7 @@ class LetterController extends Controller
             'bank' => $bank,
             'acc_no' => $request->acc_no,
             'running_bill_payment' =>  $running_bill_payment,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
@@ -1178,6 +1190,12 @@ class LetterController extends Controller
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
+
         return view('yojana.letter.running_bill_payment.account_payment_letter', [
             'plan' => $plan,
             'reg_no' => $plan->reg_no,
@@ -1185,6 +1203,8 @@ class LetterController extends Controller
             'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
             'details' => $details ?? [],
             'type' => $type,
+            'contract_kabol' => $contract_kabol,
+            'bank' => bank::query()->get()
         ]);
     }
 
@@ -1230,6 +1250,11 @@ class LetterController extends Controller
             Alert::error(config('YojanaMessage.CLIENT_ERROR'));
             return redirect()->back();
         }
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
         return view('yojana.letter.running_bill_payment.print_account_payment_letter', [
             'plan' => $plan,
             'reg_no' => $plan->reg_no,
@@ -1243,6 +1268,9 @@ class LetterController extends Controller
             'details' => $details ?? [],
             'type' => $type,
             'running_bill_payment' =>  $running_bill_payment,
+            'bank' => bank::query()->where('id', $request->bank_id)->first(),
+            'acc_no' => $request->acc_no,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
