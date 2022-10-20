@@ -104,6 +104,7 @@ class ThekkaController extends Controller
     public function thekkaKabolSubmit(ThekkaKabolRequest $request)
     {
         $contractKabol = contractKabol::query()->where('plan_id', $request->plan_id)->get();
+        $plan = plan::query()->where('id', $request->plan_id)->first();
         if (count($contractKabol) > 0) {
             foreach ($contractKabol as $key => $value) {
                 $value->delete();
@@ -121,7 +122,7 @@ class ThekkaController extends Controller
             ]);
         }
         toast("ठेक्का कबोल सुचना हाल्न सफल भयो", 'success');
-        return redirect()->back();
+        return redirect()->route('thekka-boli', ['reg_no' => $plan->reg_no]);
     }
 
     public function thekkaboli($reg_no)

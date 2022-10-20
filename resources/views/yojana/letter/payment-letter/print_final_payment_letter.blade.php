@@ -23,7 +23,7 @@
                         <div>चलानी नं . :</div>
                     </div>
 
-                      @include('yojana.letter.include.letter_title', [
+                    @include('yojana.letter.include.letter_title', [
                         'letter_title' => 'टिप्पणी आदेश',
                     ])
 
@@ -38,17 +38,34 @@
                     <p class="letter_text">
                         यस कार्यालयको स्वीकृत वार्षिक कार्यक्रम अनुसार मिति
                         {{ Nepali($plan->otherBibaran->agreement_date_nep) }} मा यस कार्यलय र
-                        {{ $type->typeable->name }} बिच संझौता भई यस {{ config('constant.SITE_TYPE') }}को वडा
-                        नं {{ Nepali($plan->ward_no) }} मा {{ $plan->name }} योजना संचालनको कार्यदेश
+                        {{ $contract_kabol == null ? $type->typeable->name : $contract_kabol->listRegistrationAttribute->name }}
+                        बिच संझौता भई यस {{ config('constant.SITE_TYPE') }}को
+                        @if ($plan->ward_no)
+                            वडा
+                            नं {{ Nepali($plan->ward_no) }}को योजना
+                        @else
+                            @if ($plan->planWardDetails->count())
+                                @if ($plan->planWardDetails[0]->ward_no)
+                                    वडा
+                                    नं {{ Nepali($plan->planWardDetails->implode('ward_no', ' ,')) }}को
+                                    {{ config('constant.SITE_TYPE') }} स्तरीय योजना
+                                @endif
+                            @endif
+                        @endif
+                        मा {{ $plan->name }} योजना संचालनको कार्यदेश
                         दिइएकोमा मिति
-                                    {{ Nepali($final_payment->plan_end_date) }}
+                        {{ Nepali($final_payment->plan_end_date) }}
                         मा तोकिएको काम सम्पन्न
-                        गरी {{ config('TYPE.' . session('type_id')) }}को मिति
+                        गरी
+                        {{ $contract_kabol == null ? $type->typeable->name : $contract_kabol->listRegistrationAttribute->name }}
+                        को मिति
                         {{ Nepali($final_payment->type_accept_date) }} मा बैठक बसी आम्दानी खर्च
                         अनुमोदन तथा सार्बजनिक गरी
                         सार्बजनिक परिक्षण समेत गरेको र अनुगमन समितको मिति
                         {{ Nepali($final_payment->anugaman_accept_date) }} मा बैठक बसी योजनाको अन्तिम
-                        भुक्तानीको लागि सिफारिस गरेको र {{ config('TYPE.' . session('type_id')) }}ले योजनाको
+                        भुक्तानीको लागि सिफारिस गरेको र
+                        {{ $contract_kabol == null ? $type->typeable->name : $contract_kabol->listRegistrationAttribute->name }}
+                        ले योजनाको
                         बिल
                         भरपाई प्राबिधिक मुल्यांकन
                         तथा योजनाको फोटोसहित यस {{ config('constant.SITE_TYPE') }}मा पेश गरी उक्त योजनाको
@@ -56,7 +73,8 @@
                         तपशिल अनुसारको रकम भुक्तानी दिन मनासिब देखिएकाले श्रीमान् समक्ष निणयार्थ यो टिप्पणी पेश
                         गरको छु ।
                     </p>
-                    <table id="table1" width="100%" class="letter_table table table-bordered" style="margin-top:15px;">
+                    <table id="table1" width="100%" class="letter_table table table-bordered"
+                        style="margin-top:15px;">
                         <thead>
                             <tr>
                                 <td class="text-right" style="width: 55%;">बिनियोजन श्रोत र व्याख्या :
@@ -70,27 +88,26 @@
                             </tr>
                             <tr>
                                 <td class="text-right">योजनाको कुल लागत अनुमान :</td>
-                                <td>{{ 'रु ' . NepaliAmount($plan->kulLagat->total_investment) }}</td>
+                                <td>{{ 'रु ' . NepaliAmount($contract_kabol == null ? $plan->kulLagat->total_investment : $contract_kabol->total_amount) }}
+                                </td>
                             </tr>
-                             <tr>
-                                                <td class='text-right'>बजेट शिर्षक:</td>
-                                                @foreach($plan->budgetSourcePlanDetails as $key => $value)
-                                                @endforeach
-                                                <td>{{$value->budgetSources->name}}</td>
-                                            </tr>
-                                            
-                                            <tr>
-                                                <td class='text-right'>विनियोजन किसिम</td>
-                                                <td>{{$plan->planAllocation->name}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class='text-right'>कार्यदेश दिएको रकम</td>
-                                                <td>{{NepaliAmount($plan->kulLagat->work_order_budget)}}</td>
-                                            </tr>
                             <tr>
-                                <td class="text-right">योजनाको काम सम्पन्न भएको मिति :</td>
-                                <td>{{ Nepali($final_payment->plan_end_date) }}</td>
+                                <td class='text-right'>बजेट शिर्षक:</td>
+                                @foreach ($plan->budgetSourcePlanDetails as $key => $value)
+                                    <td>{{ $value->budgetSources->name }}</td>
+                                @endforeach
                             </tr>
+
+                            <tr>
+                                <td class='text-right'>विनियोजन किसिम</td>
+                                <td>{{ $plan->planAllocation->name }}</td>
+                            </tr>
+                            @if ($contract_kabol == null)
+                                <tr>
+                                    <td class='text-right'>कार्यदेश दिएको रकम</td>
+                                    <td>{{ NepaliAmount($plan->kulLagat->work_order_budget) }}</td>
+                                </tr>
+                            @endif
                             <tr>
                                 <td class="text-right">भुक्तानी दिनु पर्ने कुल रकम :</td>
                                 <td>{{ NepaliAmount($final_payment->total_bhuktani_amount) }}</td>
@@ -141,32 +158,32 @@
                                 <td>{{ 'रु ' . NepaliAmount($final_payment->final_total_paid_amount) }}
                                 </td>
                             </tr>
-                            
+
                             <tr>
                                 <td class="text-right">बैंकको नाम :
                                 </td>
                                 <td>
-                                    {{isset($bank->name) ? $bank->name : ''}}
+                                    {{ isset($bank->name) ? $bank->name : '' }}
                                 </td>
                             </tr>
-                            
+
                             <tr>
                                 <td class'text-right'>
                                     खाता नं.:
                                 </td>
-                                
+
                                 <td>
-                                    {{$acc_no}}
+                                    {{ $acc_no }}
                                 </td>
                             </tr>
-                            
-                                                        <tr>
+
+                            <tr>
                                 <td class'text-right'>
                                     भुक्तानी लिनेको नाम:
                                 </td>
-                                
+
                                 <td>
-                                    {{$bhuktani_name}}
+                                    {{ $bhuktani_name }}
                                 </td>
                             </tr>
                         </thead>

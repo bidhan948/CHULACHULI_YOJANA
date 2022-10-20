@@ -60,15 +60,17 @@
                                 <p class="letter_text">
                                     यस कार्यालयको स्वीकृत वार्षिक कार्यक्रम अनुसार मिति
                                     {{ Nepali($plan->otherBibaran->agreement_date_nep) }} मा यस कार्यलय र
-                                    {{ $type->typeable->name }} बिच संझौता भई यस {{ config('constant.SITE_TYPE') }}को
+                                    {{ $contract_kabol == null ? $type->typeable->name : $contract_kabol->listRegistrationAttribute->name }}
+                                    बिच संझौता भई यस {{ config('constant.SITE_TYPE') }}को
                                     @if ($plan->ward_no)
                                         वडा
                                         नं {{ Nepali($plan->ward_no) }}को योजना
                                     @else
                                         @if ($plan->planWardDetails->count())
                                             @if ($plan->planWardDetails[0]->ward_no)
-                                            वडा
-                                            नं {{ Nepali($plan->planWardDetails->implode('ward_no', ' ,')) }}को {{config('constant.SITE_TYPE')}} स्तरीय योजना
+                                                वडा
+                                                नं {{ Nepali($plan->planWardDetails->implode('ward_no', ' ,')) }}को
+                                                {{ config('constant.SITE_TYPE') }} स्तरीय योजना
                                             @endif
                                         @endif
                                     @endif
@@ -97,9 +99,6 @@
                                                 </td>
                                                 <td>{{ $plan->detail }}</td>
                                             </tr>
-
-
-
                                             <tr>
                                                 <td class="text-right" style="width: 55%;">योजनाको कुल अनुदान रकम :
                                                 </td>
@@ -107,23 +106,26 @@
                                             </tr>
                                             <tr>
                                                 <td class="text-right">योजनाको कुल लागत अनुमान :</td>
-                                                <td>{{ 'रु ' . NepaliAmount($plan->kulLagat->total_investment) }}</td>
+                                                <td>{{ 'रु ' . NepaliAmount($contract_kabol == null ? $plan->kulLagat->total_investment : $contract_kabol->total_amount) }}
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td class='text-right'>बजेट शिर्षक:</td>
                                                 @foreach ($plan->budgetSourcePlanDetails as $key => $value)
+                                                    <td>{{ $value->budgetSources->name }}</td>
                                                 @endforeach
-                                                <td>{{ $value->budgetSources->name }}</td>
                                             </tr>
 
                                             <tr>
                                                 <td class='text-right'>विनियोजन किसिम</td>
                                                 <td>{{ $plan->planAllocation->name }}</td>
                                             </tr>
-                                            <tr>
-                                                <td class='text-right'>कार्यदेश दिएको रकम</td>
-                                                <td>{{ NepaliAmount($plan->kulLagat->work_order_budget) }}</td>
-                                            </tr>
+                                            @if ($contract_kabol == null)
+                                                <tr>
+                                                    <td class='text-right'>कार्यदेश दिएको रकम</td>
+                                                    <td>{{ NepaliAmount($plan->kulLagat->work_order_budget) }}</td>
+                                                </tr>
+                                            @endif
                                             <tr>
                                                 <td class="text-right">योजनाको काम सम्पन्न भएको मिति :</td>
                                                 <td>{{ Nepali($final_payment->plan_end_date) }}</td>

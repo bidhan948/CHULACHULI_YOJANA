@@ -1333,6 +1333,12 @@ class LetterController extends Controller
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
+
         return view('yojana.letter.payment-letter.final_tippani_letter', [
             'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
             'plan' => $plan,
@@ -1341,7 +1347,8 @@ class LetterController extends Controller
             'details' => $details ?? [],
             'type' => $type,
             'add_deadline' => $add_deadline,
-            'bank' => $bank
+            'bank' => $bank,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
@@ -1393,6 +1400,12 @@ class LetterController extends Controller
         $presentPosition = StaffService::query()->where('user_id', $request->present)->first();
         $approvePosition = StaffService::query()->where('user_id', $request->approve)->first();
 
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
+
         return view('yojana.letter.payment-letter.print_final_payment_letter', [
             'plan' => $plan,
             'reg_no' => $plan->reg_no,
@@ -1409,7 +1422,8 @@ class LetterController extends Controller
             'add_deadline' => $add_deadline,
             'bank' => $bank,
             'acc_no' => $request->acc_no,
-            'bhuktani_name' => $request->bhuktani_name
+            'bhuktani_name' => $request->bhuktani_name,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
@@ -1453,6 +1467,12 @@ class LetterController extends Controller
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
 
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
+
         return view('yojana.letter.payment-letter.final_account_payment_letter', [
             'staffs' => Staff::query()->select('id', 'user_id', 'nep_name')->get(),
             'plan' => $plan,
@@ -1461,7 +1481,8 @@ class LetterController extends Controller
             'details' => $details ?? [],
             'type' => $type,
             'add_deadline' => $add_deadline,
-            'bank' => $bank
+            'bank' => $bank,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
@@ -1508,7 +1529,11 @@ class LetterController extends Controller
                 ->first();
             $htmlTypeTableRow = $helper->getTableRowOfTypePost($details->$relationName);
         }
-
+        $contract_kabol = contractKabol::query()
+            ->where('plan_id', $plan->id)
+            ->where('is_selected', 1)
+            ->with('listRegistrationAttribute.listRegistration')
+            ->first();
         $readyPosition = StaffService::query()->where('user_id', $request->ready)->first();
         $presentPosition = StaffService::query()->where('user_id', $request->present)->first();
         $approvePosition = StaffService::query()->where('user_id', $request->approve)->first();
@@ -1529,7 +1554,8 @@ class LetterController extends Controller
             'add_deadline' => $add_deadline,
             'bank' => $bank,
             'acc_no' => $request->acc_no,
-            'bhuktani_name' => $request->bhuktani_name
+            'bhuktani_name' => $request->bhuktani_name,
+            'contract_kabol' => $contract_kabol
         ]);
     }
 
