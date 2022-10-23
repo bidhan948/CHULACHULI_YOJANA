@@ -144,10 +144,7 @@ class ThekkaController extends Controller
 
     public function thekkaKulLagatSubmit(Request $request)
     {
-        
         $plan = plan::query()->where('id',$request->plan_id)->first();
-        
-
         $request->validate([
             'physical_amount' => 'required',
             'unit_id' => 'required'
