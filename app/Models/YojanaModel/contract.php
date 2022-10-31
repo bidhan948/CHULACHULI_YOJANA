@@ -20,4 +20,9 @@ class contract extends Model
         'dakhila_date',
         'remarks',
     ];
+    public function plan()
+    {
+        return $this->belongsTo(plan::class);
+    }
+
 }
