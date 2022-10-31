@@ -36,5 +36,7 @@ $type = 'गाउँ';
         'LAND'=> 'hill',
         'GENDER' => ['female' => 'महिला', 'male' => 'पुरुष', 'other' => 'अन्य'],
         'SUPERADMIN_ID' => 2,
-        'SUPERADMIN_ROLE_ID' => 1
+        'SUPERADMIN_ROLE_ID' => 1,
+        'PUJIGAT_KHARCHA' => 18,
+        'CHALU_KHARCHA' => 19
     ];

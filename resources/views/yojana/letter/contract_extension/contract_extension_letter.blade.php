@@ -27,8 +27,7 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="letter_wrap">
-                    <form action="{{ route('plan.letter.printContractExtensionLetter') }}" method="get"
-                        target="_blank">
+                    <form action="{{ route('plan.letter.printContractExtensionLetter') }}" method="get" target="_blank">
                         <input name="plan_id" value="{{ $plan->id }}" type="hidden">
                         <input name="add_deadline_id" value="{{ $add_deadline->id }}" type="hidden">
                         <div class="letter_inner">
@@ -49,7 +48,7 @@
 
                                 <div class="letter_date">
                                     <span> मिति </span>
-                                    <input class="my-date form-control form-control-sm" name="date_nep" required />
+                                    <input class=" form-control form-control-sm" id="date" name="date_nep" required />
                                 </div>
                             </div>
                             <div class="letter_subject">विषय:- म्याद थप सम्बन्धमा |</div>
@@ -57,14 +56,19 @@
                                 <p class="letter_greeting">श्रीमान्,</p>
                                 <p class="letter_text my-2">
                                     यस कार्यालयको स्वीकृत वार्षिक कार्यक्रम अनुसार {{ config('constant.SITE_NAME') }} वडा
-                                    नं. {{ Nepali($plan->planWardDetails->implode('ward_no', ',')) }} मा {{ $plan->name }} योजना स्वीकृत भइ मिती
+                                    नं. {{ Nepali($plan->planWardDetails->implode('ward_no', ',')) }} मा
+                                    {{ $plan->name }} योजना स्वीकृत भइ मिती
                                     {{ Nepali($plan->otherBibaran->agreement_date_nep) }} मा यस
                                     {{ config('constant.SITE_TYPE') }}सँग
                                     भएको सम्झौता अनुसार उक्त योजना मिति {{ Nepali($plan->otherBibaran->start_date) }} देखी
                                     काम सुरु गरी मिती {{ Nepali($plan->otherBibaran->end_date) }} भित्रमा
-                                    काम सम्पन्न गर्ने गरी {{ config('TYPE.' . session('type_id')) }} सँग सम्झौता गरी
+                                    काम सम्पन्न गर्ने गरी
+                                    {{ $contract_kabol == null ? config('TYPE.' . session('type_id')) : $contract_kabol->listRegistrationAttribute->listRegistration->name }}
+                                    सँग सम्झौता गरी
                                     योजनाको
-                                    कार्यदेश दिइएकोमा {{ config('TYPE.' . session('type_id')) }}ले मिति
+                                    कार्यदेश दिइएकोमा
+                                    {{ $contract_kabol == null ? config('TYPE.' . session('type_id')) : $contract_kabol->listRegistrationAttribute->listRegistration->name }}ले
+                                    मिति
                                     {{ Nepali($add_deadline->consumer_date_nep) }}मा यस
                                     कार्यालयमा {{ $add_deadline->remark }} कारणले तोकिएको समयमा योजना सम्पन्न
                                     गर्न नसकिएको भनि म्याद थपका लागी निबेदन दिएकाले नियम अनुसार
@@ -118,21 +122,17 @@
     <!-- /.container-fluid -->
 @endsection
 @section('scripts')
-    <script src="http://nepalidatepicker.sajanmaharjan.com.np/nepali.datepicker/js/nepali.datepicker.v3.7.min.js"
-        type="text/javascript"></script>
+    <script src="{{ asset('date-picker/js/nepali.datepicker.v3.7.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
     <script>
         window.onload = function() {
-            var date_fields = document.getElementsByClassName("my-date");
-            for (let index = 0; index < date_fields.length; index++) {
-                const element = date_fields[index];
-                element.nepaliDatePicker({
-                    readOnlyInput: true,
-                    ndpTriggerButton: false,
-                    ndpYear: true,
-                    ndpMonth: true,
-                    ndpYearCount: 10
-                });
-            }
+            var mainInput = document.getElementById("date");
+            mainInput.nepaliDatePicker({
+                readOnlyInput: true,
+                ndpYear: true,
+                ndpMonth: true,
+                ndpYearCount: 100
+            });
         };
 
         function assignPost(id) {

@@ -92,7 +92,10 @@
         let checkRegNo = [];
 
         function searchYojana(row) {
+            
             var reg_no = +$("#reg_no_" + row).val();
+            
+           
             var merge_type = +$("#merge_type").val();
             if (reg_no == '') {
                 $("#name_" + row).html("");

@@ -5,6 +5,7 @@ use App\Http\Controllers\YojanaController\setting\StaffController;
 use App\Http\Controllers\YojanaControllers\{
     AdvanceController,
     ConsumerController,
+    ContractLetterController,
     FinalPaymentController,
     HomeController,
     KulLagatController,
@@ -30,13 +31,14 @@ use App\Http\Controllers\YojanaControllers\setting\{
     ContingencyController,
     DecimalPointController,
     DeductionControllers,
+    ExcelUploaderController,
     InstiutionalCommitteeController,
     ListRegistrationController,
     TermsController
 };
 use Illuminate\Support\Facades\Route;
 
-Route::get('clear',function(){
+Route::get('clear', function () {
     Artisan::call('optimize:clear');
 });
 
@@ -120,16 +122,20 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('maelpa-report', [ReportController::class, 'malepaReport'])->name('report.malepa');
             Route::get('generate-numeric-report', [ReportController::class, 'generateNumericReport'])->name('report.generateNumericReport');
             Route::get('committee-dashboard', [ReportController::class, 'committeeDashboard'])->name('report.committee.dashboard');
-            Route::get('commitee-dashboard-submit',[ReportController::class,'commitee_dashboard_submit'])->name('commitee-dashboard-submit');
+            Route::get('commitee-dashboard-submit', [ReportController::class, 'commitee_dashboard_submit'])->name('commitee-dashboard-submit');
             Route::get('{type}', [ReportController::class, 'committeReport'])->name('plan.committe_report');
         });
-                Route::get('yojana-detail-report',[ReportController::class,'yojana_detail_report'])->name('report.yojana.detail');
+        Route::get('yojana-detail-report', [ReportController::class, 'yojana_detail_report'])->name('report.yojana.detail');
 
 
         // setting
         Route::prefix('setting')->group(function () {
             Route::get('deduction', [DeductionControllers::class, 'index'])
                 ->name('plan.setting_deduction');
+            Route::post('excel', [ExcelUploaderController::class, 'store'])
+                ->name('plan.setting.excel_store');
+            Route::get('excel', [ExcelUploaderController::class, 'index'])
+                ->name('plan.setting.excel');
             Route::get('plan/staff', [StaffController::class, 'index'])
                 ->name('plan.setting.staff');
             Route::post('plan/staff', [StaffController::class, 'store'])
@@ -216,14 +222,14 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('letter/contract-extension-letter-2/{reg_no}', [LetterController::class, 'extensionLetter'])->name('plan.letter.extensionLetter');
             Route::post('letter/contract-extension-letter-2-submit', [LetterController::class, 'extensionLetterSubmit'])->name('plan.letter.extensionLetterSubmit');
             Route::get('letter/recommendation/{reg_no}', [LetterController::class, 'recommendationDashboard'])->name('plan.letter.recommendation');
-            Route::get('letter/contract-letter-sifarish/{reg_no}',[LetterController::class,'contractSifarishLetter'])->name('plan.contract-sifarish-letter');
-            Route::get('letter/mulyankan-bhuktani/{reg_no}',[LetterController::class,'mulyankanSifarisLetter'])->name('plan.letter.mulyankan_bhuktani');
-            Route::get('print/letter/mulyankan-bhuktani',[LetterController::class,'printMulyankanSifarisLetter'])->name('plan.print.letter.mulyankan_bhuktani');
-            Route::get('letter/final-payment-sifaris/{reg_no}',[LetterController::class,'finalPaymentSifaris'])->name('plan.letter.final_payment_sifaris');
-            Route::get('print/letter/final-payment-sifaris',[LetterController::class,'printFinalPaymentSifaris'])->name('plan.print.letter.final_payment_sifaris');
-            
+            Route::get('letter/contract-letter-sifarish/{reg_no}', [LetterController::class, 'contractSifarishLetter'])->name('plan.contract-sifarish-letter');
+            Route::get('letter/mulyankan-bhuktani/{reg_no}', [LetterController::class, 'mulyankanSifarisLetter'])->name('plan.letter.mulyankan_bhuktani');
+            Route::get('print/letter/mulyankan-bhuktani', [LetterController::class, 'printMulyankanSifarisLetter'])->name('plan.print.letter.mulyankan_bhuktani');
+            Route::get('letter/final-payment-sifaris/{reg_no}', [LetterController::class, 'finalPaymentSifaris'])->name('plan.letter.final_payment_sifaris');
+            Route::get('print/letter/final-payment-sifaris', [LetterController::class, 'printFinalPaymentSifaris'])->name('plan.print.letter.final_payment_sifaris');
+
             Route::get('print-letter/contract-extension-letter', [LetterController::class, 'printContractExtensionLetter'])->name('plan.letter.printContractExtensionLetter');
-            Route::get('print-letter/contract-extension-letter-2', [LetterController::class, 'printExtensionLetter'])->name('plan.letter.printExtensionLetter');
+            Route::post('print-letter/contract-extension-letter-two', [LetterController::class, 'printExtensionLetter'])->name('plan.letter.printExtensionLetter');
             Route::get('print-letter/mandate-advance-agreement-letter', [LetterController::class, 'printMandateAdvanceAgreementLetter'])->name('plan.print.letter.mandateAdvanceAgreement');
             Route::get('print-letter/peski-account-letter', [LetterController::class, 'printPeskiAccountLetter'])->name('plan.print.letter.peski_account_letter');
             Route::get('print-letter/advance-payment-letter', [LetterController::class, 'printAdvancePaymentLetter'])->name('plan.print.letter.advance_payment_letter');
@@ -233,15 +239,15 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('print-letter/work-order', [LetterController::class, 'printworkOrderLetter'])->name('plan.letter.printWorkOrder');
             Route::get('payment-letter/dashboard/{reg_no}', [LetterController::class, 'paymentLetterDashboard'])->name('plan.letter.paymentLetterDashboard');
             Route::get('final-payment-letter/tippani/{reg_no}', [LetterController::class, 'finalPaymentLetterTippani'])->name('plan.letter.payment_letter.tippani');
-            Route::get('final-account-payment-letter/{reg_no}',[LetterController::class,'finalAccountPaymentLetter'])->name('plan.letter.final_account_payment_letter');
+            Route::get('final-account-payment-letter/{reg_no}', [LetterController::class, 'finalAccountPaymentLetter'])->name('plan.letter.final_account_payment_letter');
             Route::get('print-final-payment-letter/tippani', [LetterController::class, 'printFinalPaymentLetterTippani'])->name('plan.print.letter.payment_letter.tippani');
-            Route::get('print-final-account-payment-letter',[LetterController::class,'printFinalAccountPaymentLetter'])->name('plan.print.letter.final_account_payment_letter');
-            Route::get('print-letter-contract-sifarish',[LetterController::class,'printContractSifarishLetter'])->name('plan.letter.printContractSifarishLetter');
+            Route::get('print-final-account-payment-letter', [LetterController::class, 'printFinalAccountPaymentLetter'])->name('plan.print.letter.final_account_payment_letter');
+            Route::get('print-letter-contract-sifarish', [LetterController::class, 'printContractSifarishLetter'])->name('plan.letter.printContractSifarishLetter');
             // Running bill payment routes
             Route::get('running-bill-payment/{reg_no}', [RunningBillPaymentController::class, 'index'])->name('plan.running_bill_payment.index');
             Route::get('running-bill-payment-calculation', [RunningBillPaymentController::class, 'calculateRunningBill'])->name('plan.calculateRunningBill');
             Route::post('running-bill-payment', [RunningBillPaymentController::class, 'store'])->name('plan.running_bill_payment.store');
-            
+
             // final payment route
             Route::get('final-payment/{reg_no}', [FinalPaymentController::class, 'index'])->name('plan.final_payment.index');
             Route::post('final-payment', [FinalPaymentController::class, 'store'])->name('plan.final_payment.store');
@@ -263,11 +269,12 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('/kul-lagat/update/{kul_lagat}', [KulLagatController::class, 'update'])->name('kul_lagat.update');
             // type bibran route
             Route::get('/plan/type-bibaran/{reg_no}', [TypeController::class, 'index'])->name('plan.consumer-bibaran');
+            Route::get('/plan/upabhokta-samiti/{reg_no}', [ConsumerController::class, 'index'])->name('plan.consumer-bibaran_upabhokta');
             Route::post('/plan/type-bibaran/store', [TypeController::class, 'store'])->name('type.store');
             Route::put('/plan/type-bibaran/update/{type}', [TypeController::class, 'update'])->name('type.update');
             // consumer bibaran
             Route::get('/plan/consumer-bibaran/{reg_no}', [ConsumerController::class, '\index'])->name('plan_consumer.index');
-           Route::post('/plan/consumer-bibaran/store', [ConsumerController::class, 'store'])->name('plan_consumer.store');
+            Route::post('/plan/consumer-bibaran/store', [ConsumerController::class, 'store'])->name('plan_consumer.store');
             Route::put('/plan/consumer-bibaran/update/{consumer}', [ConsumerController::class, 'update'])->name('plan_consumer.update');
             // Sanstha samiti
             Route::get('/plan/sanstha_samiti/{reg_no}', [InstiutionalCommitteeController::class, 'index'])
@@ -299,20 +306,40 @@ Route::group(['middleware' => 'auth'], function () {
                 ->name('other-bibaran.update');
 
             //Thekka marfat
-            Route::get('/thekka-suchana-detail/{reg_no}', [ThekkaController::class,'thekkaSuchanaDetail'])->name('thekka-suchana-detail');
-            Route::post('/thekka-suchana-detail-submit', [ThekkaController::class,'thekkaSuchanaDetailSubmit'])->name('thekka-suchana-detail-submit');
-            
-            Route::get('/thekka-open/{reg_no}', [ThekkaController::class,'thekkaOpenForm'])->name('thekka-open');
-            Route::post('/thekka-open-submit',[ThekkaController::class,'thekkaOpenSubmit'])->name('thekka-open-submit');
+            Route::get('/thekka-suchana-detail/{reg_no}', [ThekkaController::class, 'thekkaSuchanaDetail'])->name('thekka-suchana-detail');
+            Route::post('/thekka-suchana-detail-submit', [ThekkaController::class, 'thekkaSuchanaDetailSubmit'])->name('thekka-suchana-detail-submit');
 
-            Route::get('thekka-kabol/{reg_no}',[ThekkaController::class,'thekkaKabol'])->name('thekka-kabol');
-            Route::post('thekka-kabol-submit',[ThekkaController::class,'thekkaKabolSubmit'])->name('thekka-kabol-submit');
-            
-            Route::get('thekka-boli/{reg_no}',[ThekkaController::class,'thekkaboli'])->name('thekka-boli');
-            Route::post('thekka-boli-submit',[ThekkaController::class,'thekkaBoliSubmit'])->name('thekka-boli-submit');
+            Route::get('/thekka-kul-lagat/{reg_no}', [ThekkaController::class, 'thekkaKulalagat'])->name('plan.thekka_kul_lagat');
 
-            Route::post('thekka-kul-lagat-submit',[ThekkaController::class,'thekkaKulLagatSubmit'])->name('thekka-kul-lagat-submit');
+            Route::get('/thekka-bibaran/{reg_no}', [ThekkaController::class, 'thekkaBibaran'])->name('plan.thekka_bibaran');
 
+            Route::get('/thekka-open/{reg_no}', [ThekkaController::class, 'thekkaOpenForm'])->name('thekka-open');
+            Route::post('/thekka-open-submit', [ThekkaController::class, 'thekkaOpenSubmit'])->name('thekka-open-submit');
+
+            Route::get('thekka-kabol/{reg_no}', [ThekkaController::class, 'thekkaKabol'])->name('thekka-kabol');
+            Route::post('thekka-kabol-submit', [ThekkaController::class, 'thekkaKabolSubmit'])->name('thekka-kabol-submit');
+
+            Route::get('thekka-boli/{reg_no}', [ThekkaController::class, 'thekkaboli'])->name('thekka-boli');
+            Route::post('thekka-boli-submit', [ThekkaController::class, 'thekkaBoliSubmit'])->name('thekka-boli-submit');
+
+            Route::post('thekka-kul-lagat-submit', [ThekkaController::class, 'thekkaKulLagatSubmit'])->name('thekka-kul-lagat-submit');
+
+            // thekka payment letter
+            Route::get('thekka-running-bill-payment/{reg_no}', [ThekkaController::class, 'runningBillPayment'])->name('plan.running_bill_payment.thekka.running_bill_payment');
+            Route::post('thekka-running-bill-payment', [ThekkaController::class, 'runningBillPaymentStore'])->name('plan.thekka.running_bill_payment.store');
+            Route::get('thekka-final-payment/{reg_no}', [ThekkaController::class, 'finalPayment'])->name('plan.thekka.final_payment');
+            Route::post('thekka-final-bill-payment', [ThekkaController::class, 'finalPaymentStore'])->name('plan.thekka.final_payment_store');
+            // thekka route
+            Route::prefix('thekka')->group(function () {
+                Route::get('letter/contract/{reg_no}', [ContractLetterController::class, 'thekkaContractLetter'])->name('plan.letter.thekka.contract');
+                Route::get('print/letter/contract/{reg_no}', [ContractLetterController::class, 'printThekkaContractLetter'])->name('print.plan.letter.thekka.contract');
+                Route::get('letter/bank/{reg_no}', [ContractLetterController::class, 'bankLetter'])->name('plan.letter.thekka.bank');
+                Route::get('print/letter/bank', [ContractLetterController::class, 'printBankLetter'])->name('print.plan.letter.thekka.bank');
+                Route::get('letter/work-order/{reg_no}', [ContractLetterController::class, 'workOrderLetter'])->name('plan.letter.thekka.work_order');
+                Route::get('print/letter/work-order', [ContractLetterController::class, 'printWorkOrderLetter'])->name('print.plan.letter.thekka.work_order');
+                Route::get('letter/agreement/{reg_no}', [ContractLetterController::class, 'agreementLetter'])->name('plan.letter.thekka.agreement');
+                Route::get('print/letter/agreement', [ContractLetterController::class, 'printAgreementLetter'])->name('print.plan.letter.thekka.agreement');
+            });
         });
     });
 });

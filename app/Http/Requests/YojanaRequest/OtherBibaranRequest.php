@@ -30,11 +30,13 @@ class OtherBibaranRequest extends FormRequest
             'end_date' => 'sometimes',
             'staff_id' => 'required',
             'agreement_date_nep' => 'required',
-            'post.*' => 'required',
+            'post.*' => 'present',
             'house_family_count' => 'required',
             'female' => 'required',
             'male' => 'required',
-            'committee_count' => 'sometimes'
+            'committee_count' => 'sometimes',
+            'work_order_date' => 'sometimes',
+            'venue' => 'sometimes'
         ];
     }
 }

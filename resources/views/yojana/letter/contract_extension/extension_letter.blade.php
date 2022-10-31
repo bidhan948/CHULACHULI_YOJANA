@@ -27,7 +27,8 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="letter_wrap">
-                    <form action="{{ route('plan.letter.printExtensionLetter') }}" method="get" target="_blank">
+                    <form action="{{ route('plan.letter.printExtensionLetter') }}" method="post" target="_blank">
+                        @csrf
                         <input name="plan_id" value="{{ $plan->id }}" type="hidden">
                         <input name="add_deadline_id" value="{{ $add_deadline->id }}" type="hidden">
                         <div class="letter_inner">
@@ -48,13 +49,14 @@
 
                                 <div class="letter_date">
                                     <span> मिति </span>
-                                    <input class="my-date form-control form-control-sm" name="date_nep" required />
+                                    <input class="form-control form-control-sm" name="date_nep" id="date" required />
                                 </div>
                             </div>
                             <div class="letter_subject">विषय:- म्याद थप सम्बन्धमा |</div>
                             <div class="letter_body">
                                 <p class="letter_greeting">श्री
-                                    {{ $type->typeable->name . ' ज्यु' }}
+                                    {{ $contract_kabol == null ? $type->typeable->name : $contract_kabol->listRegistrationAttribute->name }}
+                                    ज्यु
                                     ,</p>
                                 @if (config('TYPE.AMANAT_MARFAT') != session('type_id'))
                                     <p class="letter_greeting">
@@ -72,7 +74,8 @@
                                     भएको संझौता अनुसार उक्त योजना मिति {{ Nepali($plan->otherBibaran->start_date) }} देखी
                                     काम सुरु गरी मिती {{ Nepali($plan->otherBibaran->end_date) }} भित्रमा
                                     काम सम्पन्न गर्ने गरी योजनाको कार्यदेश दिइएकोमा
-                                    {{ config('TYPE.' . session('type_id')) }}ले मिति
+                                    {{ ($contract_kabol == null ? config('TYPE.' . session('type_id')) : $contract_kabol == null) ? $type->typeable->name : $contract_kabol->listRegistrationAttribute->listRegistration->name }}ले
+                                    मिति
                                     {{ Nepali($add_deadline->consumer_date_nep) }} मा यस
                                     कार्यालयमा {{ Nepali($add_deadline->remark) }} कारणले तोकिएको समयमा योजना सम्पन्न गर्न
                                     नसकिएको भनि म्याद थपका
@@ -127,22 +130,21 @@
     <!-- /.container-fluid -->
 @endsection
 @section('scripts')
-    <script src="http://nepalidatepicker.sajanmaharjan.com.np/nepali.datepicker/js/nepali.datepicker.v3.7.min.js"
-        type="text/javascript"></script>
-    <script>
-        window.onload = function() {
-            var date_fields = document.getElementsByClassName("my-date");
-            for (let index = 0; index < date_fields.length; index++) {
-                const element = date_fields[index];
-                element.nepaliDatePicker({
-                    readOnlyInput: true,
-                    ndpTriggerButton: false,
-                    ndpYear: true,
-                    ndpMonth: true,
-                    ndpYearCount: 10
-                });
-            }
-        };
+<script src="{{ asset('date-picker/js/nepali.datepicker.v3.7.min.js') }}"></script>
+<script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
+<script>
+    window.onload = function() {
+
+        var mainInput = document.getElementById("date");
+        mainInput.nepaliDatePicker({
+            readOnlyInput: true,
+            ndpYear: true,
+            ndpMonth: true,
+            ndpYearCount: 100
+        });
+
+
+    };
 
         function assignPost(id) {
             var val = $("#" + id).val();

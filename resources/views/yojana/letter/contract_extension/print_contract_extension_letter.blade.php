@@ -36,14 +36,19 @@
                     <p class="letter_greeting">श्रीमान्,</p>
                     <p class="letter_text my-2">
                         यस कार्यालयको स्वीकृत वार्षिक कार्यक्रम अनुसार {{ config('constant.SITE_NAME') }} वडा
-                        नं. {{ Nepali($plan->planWardDetails->implode('ward_no', ',')) }} मा {{ $plan->name }} योजना स्वीकृत भइ मिती
+                        नं. {{ Nepali($plan->planWardDetails->implode('ward_no', ',')) }} मा
+                        {{ $plan->name }} योजना स्वीकृत भइ मिती
                         {{ Nepali($plan->otherBibaran->agreement_date_nep) }} मा यस
                         {{ config('constant.SITE_TYPE') }}सँग
-                        भएको संझौता अनुसार उक्त योजना मिति {{ Nepali($plan->otherBibaran->start_date) }} देखी
+                        भएको सम्झौता अनुसार उक्त योजना मिति {{ Nepali($plan->otherBibaran->start_date) }} देखी
                         काम सुरु गरी मिती {{ Nepali($plan->otherBibaran->end_date) }} भित्रमा
-                        काम सम्पन्न गर्ने गरी {{ config('TYPE.' . session('type_id')) }} सँग सम्झौता गरी
+                        काम सम्पन्न गर्ने गरी
+                        {{ $contract_kabol == null ? config('TYPE.' . session('type_id')) : $contract_kabol->listRegistrationAttribute->listRegistration->name }}
+                        सँग सम्झौता गरी
                         योजनाको
-                        कार्यदेश दिइएकोमा {{ config('TYPE.' . session('type_id')) }}ले मिति
+                        कार्यदेश दिइएकोमा
+                        {{ $contract_kabol == null ? config('TYPE.' . session('type_id')) : $contract_kabol->listRegistrationAttribute->listRegistration->name }}ले
+                        मिति
                         {{ Nepali($add_deadline->consumer_date_nep) }}मा यस
                         कार्यालयमा {{ $add_deadline->remark }} कारणले तोकिएको समयमा योजना सम्पन्न
                         गर्न नसकिएको भनि म्याद थपका लागी निबेदन दिएकाले नियम अनुसार

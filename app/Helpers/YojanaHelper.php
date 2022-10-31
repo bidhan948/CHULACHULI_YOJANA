@@ -185,7 +185,7 @@ class YojanaHelper
         $decimalPoint = decimal_point::query()
             ->where('fiscal_year_id', getCurrentFiscalYear(true)->id)
             ->first();
-            
+
         if ($plan_evaluation_amount >= ($kul_lagat->total_investment - $plan_evaluation_amount_sum)) {
             $plan_evaluation_amount = ($kul_lagat->total_investment - $plan_evaluation_amount_sum);
         }
@@ -290,5 +290,28 @@ class YojanaHelper
             ->first();
 
         return $budgetSource->amount - $budgetSource->amountToBeSubtracted;
+    }
+
+    public function returnLatestRegNo(plan $plan)
+    {
+        $reg_no = $plan->latest()->first();
+        return  $reg_no == null ? 1 : $reg_no->reg_no;
+    }
+
+    public function returnKharchType(string $param)
+    {
+        $kharch_type = "";
+        if ($param == null) {
+            return '';
+        }
+        switch ($param) {
+            case 'p':
+                $kharch_type = config('constant.PUJIGAT_KHARCHA');
+                break;
+            default:
+                $kharch_type = config('constant.CHALU_KHARCHA');
+                break;
+        }
+        return $kharch_type;
     }
 }

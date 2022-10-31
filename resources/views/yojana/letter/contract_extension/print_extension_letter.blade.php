@@ -34,7 +34,8 @@
                 <div class="letter_subject">विषय:- योजना संझौता कार्यादेश |</div>
                 <div class="letter_body">
                     <p class="letter_greeting">श्री
-                        {{ $type->typeable->name . ' ज्यु' }}
+                        {{ $contract_kabol == null ? $type->typeable->name : $contract_kabol->listRegistrationAttribute->name }}
+                        ज्यु
                         ,</p>
                     @if (config('TYPE.AMANAT_MARFAT') != session('type_id'))
                         <p class="letter_greeting">
@@ -52,7 +53,8 @@
                         भएको संझौता अनुसार उक्त योजना मिति {{ Nepali($plan->otherBibaran->start_date) }} देखी
                         काम सुरु गरी मिती {{ Nepali($plan->otherBibaran->end_date) }} भित्रमा
                         काम सम्पन्न गर्ने गरी योजनाको कार्यदेश दिइएकोमा
-                        {{ config('TYPE.' . session('type_id')) }}ले मिति
+                        {{ ($contract_kabol == null ? config('TYPE.' . session('type_id')) : $contract_kabol == null) ? $type->typeable->name : $contract_kabol->listRegistrationAttribute->listRegistration->name }}ले
+                        मिति
                         {{ Nepali($add_deadline->consumer_date_nep) }} मा यस
                         कार्यालयमा {{ Nepali($add_deadline->remark) }} कारणले तोकिएको समयमा योजना सम्पन्न गर्न
                         नसकिएको भनि म्याद थपका

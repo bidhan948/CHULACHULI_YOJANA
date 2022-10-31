@@ -26,7 +26,7 @@ class ThekkaOpenRequest extends FormRequest
         return [
             'plan_id' => 'required',
             'name' => 'required',
-            'bank_name' => 'required',
+            'bank_name.*' => 'required',
             'bank_guarantee_amount' => 'required',
             'bank_date' => 'required',
             'bail_amount' => 'required',

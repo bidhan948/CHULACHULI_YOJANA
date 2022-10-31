@@ -112,7 +112,6 @@ class RunningBillPaymentController extends Controller
                         );
                     }
                 } else {
-
                     $running_bill_payment_latest = running_bill_payment::create($request->except(
                         'deduction_percent',
                         'deduction',

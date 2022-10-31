@@ -61,14 +61,15 @@
                                 <p class="letter_text">
                                     यस कार्यालयको स्वीकृत वार्षिक कार्यक्रम अनुसार मिति
                                     {{ Nepali($plan->otherBibaran->agreement_date_nep) }} मा यस कार्यलय र
-                                    {{ $type->typeable->name }} बिच संझौता भई यस {{ config('constant.SITE_TYPE') }}को वडा
+                                    {{ $contract_kabol == null ? $type->typeable->name : $contract_kabol->listRegistrationAttribute->name }}
+                                    बिच संझौता भई यस {{ config('constant.SITE_TYPE') }}को वडा
                                     नं {{ Nepali($plan->ward_no) }} मा {{ $plan->name }} योजना संचालनको कार्यदेश
                                     दिइएकोमा मिति
                                     {{ Nepali($running_bill_payment->bill_date_nep) }} मा
                                     प्राबिधिक मुल्याकन गर्दा तपशिल अनुसारको रकम दिन मनासिब देखिएकाले श्रीमान् समक्ष निणयार्थ
                                     यो
                                     टिप्पणी पेश गरको छु ।
-
+                                </p>
                                 <p class="text-center font-weight-bold">{{ __('तपशिल') }}</p>
                                 </p>
                                 <table class="letter_table table table-bordered my-3">
@@ -77,19 +78,19 @@
                                         <td class="text-center" style="font-weight: lighter">
                                             {{ $plan->detail }}</th>
                                     </tr>
-                                    
+
                                     <tr>
                                         <td class="text-right">बैंकको नाम</td>
-                                            <td>
+                                        <td>
                                             <select name="bank_id">
                                                 <option value="">-- छानुहोस --</option>
-                                                    @foreach ($bank as $data)
-                                                        <option value="{{ $data->id }}">{{ $data->name }}</option>
-                                                        @endforeach
-                                                    </select>   
-                                            	</td>
+                                                @foreach ($bank as $data)
+                                                    <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
                                     </tr>
-                                            	
+
                                     <tr>
                                         <td class="text-right">खाता नं.</td>
                                         <td>
@@ -99,17 +100,21 @@
                                     <tr>
                                         <td class="text-center">योजनाको कुल अनुदान रकम :</td>
                                         <td class="text-center" style="font-weight: lighter">
-                                            {{ NepaliAmount($plan->kulLagat->napa_amount) }}</td>
+                                            {{ NepaliAmount($contract_kabol == null ? $plan->kulLagat->napa_amount : $plan->grant_amount) }}
+                                        </td>
                                     </tr>
-                                    <tr>
-                                        <td class="text-center">योजनाको कुल लागत अनुमान :</td>
-                                        <td class="text-center" style="font-weight: lighter">
-                                            {{ NepaliAmount($plan->kulLagat->total_investment) }}</td>
-                                    </tr>
+                                    @if ($contract_kabol == null)
+                                        <tr>
+                                            <td class="text-center">योजनाको कुल लागत अनुमान :</td>
+                                            <td class="text-center" style="font-weight: lighter">
+                                                {{ NepaliAmount($plan->kulLagat->total_investment) }}</td>
+                                        </tr>
+                                    @endif
                                     <tr>
                                         <td class="text-center">कार्यदेश दिएको रकम :</td>
                                         <td class="text-center" style="font-weight: lighter">
-                                            {{ NepaliAmount($plan->kulLagat->work_order_budget) }}</td>
+                                            {{ NepaliAmount($contract_kabol == null ? $plan->kulLagat->work_order_budget : $contract_kabol->total_amount) }}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="text-center">{{ __('योजनाको मुल्यांकन किसिम :') }}</th>
@@ -163,7 +168,7 @@
                                         <td class="text-center" style="font-weight: lighter">
                                             रु {{ NepaliAmount($running_bill_payment->total_paid_amount) }}</td>
                                     </tr>
-                                    
+
 
                                 </table>
                             </div>
@@ -216,7 +221,7 @@
         type="text/javascript"></script>
     <script>
         window.onload = function() {
-          $('#date').nepaliDatePicker({
+            $('#date').nepaliDatePicker({
                 ndpYear: true,
                 ndpMonth: true,
                 ndpYearCount: 70,

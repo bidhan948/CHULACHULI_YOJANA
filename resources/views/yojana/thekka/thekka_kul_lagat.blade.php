@@ -20,75 +20,87 @@
             <h3>ठेक्काको कुल लागत अनुमान</h3>
         </div>
 
-        <form action="{{route('thekka-kul-lagat-submit')}}" method="POST">
-        @csrf   
-        <div class="card-body">
-            <table class="table table-bordered w-100">
-                <thead>
-                    <tr>
-                        <input type="hidden" name="kabol_id" value="{{$contract_kabol->id}}">
-                        <input type="hidden" name="plan_id" value="{{$contract_kabol->plan_id}}">
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>भौतिक परिणाम	</td>
-                        <td><input class="form-control" name="physical_amount" type="number"></td>
-                    </tr>
+        <form action="{{ route('thekka-kul-lagat-submit') }}" method="POST">
+            @csrf
+            <div class="card-body">
+                <table class="table table-bordered w-100">
+                    <thead>
+                        <tr>
+                            <input type="hidden" name="kabol_id" value="{{ $contract_kabol->id }}">
+                            <input type="hidden" name="plan_id" value="{{ $contract_kabol->plan_id }}">
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>भौतिक परिणाम </td>
+                            <td><input class="form-control" name="physical_amount" type="number"
+                                    value="{{ $contract_kul_lagat == null ? '' : $contract_kul_lagat->physical_amount }}">
+                            </td>
+                        </tr>
 
-                    <tr>
-                        <td>भौतिक ईकाई	</td>
-                        <td><select class="form-control" name="unit_id" aria-label="Default select example">
-                            <option selected="">छान्नुहोस्</option>
-                            @foreach ($units as $item)
-                                <option value="{{$item->id}}">{{$item->name}}</option>
-                            @endforeach
+                        <tr>
+                            <td>भौतिक ईकाई </td>
+                            <td><select class="form-control" name="unit_id" aria-label="Default select example">
+                                    <option value="">छान्नुहोस्</option>
+                                    @foreach ($units as $item)
+                                        <option value="{{ $item->id }}"
+                                            {{ $contract_kul_lagat == null ? '' : ($contract_kul_lagat->unit_id == $item->id ? 'selected' : '') }}>
+                                            {{ $item->name }}</option>
+                                    @endforeach
 
-                          </select></td>
-                    </tr>
+                                </select></td>
+                        </tr>
 
-                    <tr>
-                        <td>गाँउपालिकाबाट अनुदान	</td>
-                        <td><input class="form-control" type="text" value="{{nepali($contract_kabol->plan->grant_amount)}}"  readonly>
-                            <input class="form-control" type="hidden" value="{{$contract_kabol->plan->grant_amount}}" name="grant_amount" readonly>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>गाँउपालिकाबाट अनुदान </td>
+                            <td><input class="form-control" type="text"
+                                    value="{{ nepali($contract_kabol->plan->grant_amount) }}" readonly>
+                                <input class="form-control" type="hidden"
+                                    value="{{ $contract_kabol->plan->grant_amount }}" name="grant_amount" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ठेक्का कबोल गरेको कुल रकम (भ्याट बाहेक) </td>
+                            <td><input class="form-control" value="{{ NepaliAmount($contract_kabol->has_vat == 2 ? $contract_kabol->total_kabol_amount : getPreciseFloat(($contract_kabol->total_kabol_amount/1.13),2) ) }}"
+                                    type="text" readonly>
 
-                    <tr>
-                        <td>कुल ठेक्का रकम जम्मा	</td>
-                        <td><input class="form-control" value="{{nepali($contract_kabol->contract->total_thekka_amount)}}" type="text" readonly>
-                            <input class="form-control" value="{{$contract_kabol->contract->total_thekka_amount}}" name="total_thekka_amount" type="hidden" readonly>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
 
-                    <tr>
-                        <td>ठेक्का कबोल गरेको कुल रकम		</td>
-                        <td><input  class="form-control" value="{{nepali($contract_kabol->total_kabol_amount)}}" type="text" readonly> 
-                            
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>कुल ठेक्का रकम जम्मा (भ्याट सहित)</td>
+                            <td><input class="form-control"
+                                    value="{{ nepali($contract_kabol->total_amount) }}" type="text"
+                                    readonly>
+                                <input class="form-control" value="{{ $contract_kabol->total_amount }}"
+                                    name="total_thekka_amount" type="hidden" readonly>
+                            </td>
+                        </tr>
 
-                    <tr>
-                        <td>कार्यदेश दिएको रकम	</td>
-                        <td><input class="form-control" value="{{nepali($contract_kabol->total_kabol_amount)}}"  type="text" readonly>
-                            <input class="form-control" value="{{$contract_kabol->total_kabol_amount}}" name="total_kabol_amount" type="hidden" readonly> 
-                        </td>
-                    </tr>
-
-                    
-                    <tr>
-                        <td>योजना संचालन गर्ने फर्म/कम्पनी</td>
-                        <td><input class="form-control" value="{{$contract_kabol ->contractor_name}}" name="contractor_name" type="text" readonly></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                        <tr>
+                            <td>कार्यदेश दिएको रकम </td>
+                            <td><input class="form-control" value="{{ nepali($contract_kabol->total_amount) }}"
+                                    type="text" readonly>
+                                <input class="form-control" value="{{ $contract_kabol->total_amount }}"
+                                    name="total_kabol_amount" type="hidden" readonly>
+                            </td>
+                        </tr>
 
 
-        <div class="card-footer">
-            <button class="btn btn-primary">Submit</button>
-        </div>
-    </form>
+                        <tr>
+                            <td>योजना संचालन गर्ने फर्म/कम्पनी</td>
+                            <td><input class="form-control" value="{{ $contract_kabol->contractor_name }}"
+                                    name="contractor_name" type="text" readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="card-footer">
+                <button class="btn btn-primary">Submit</button>
+            </div>
+        </form>
 
     </div>
 @endsection

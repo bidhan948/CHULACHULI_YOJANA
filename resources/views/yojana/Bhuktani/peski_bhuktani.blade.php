@@ -166,7 +166,7 @@
     <script src="http://nepalidatepicker.sajanmaharjan.com.np/nepali.datepicker/js/nepali.datepicker.v3.7.min.js"
         type="text/javascript"></script>
     <script>
-        let total_investment = +{{ $plan->kulLagat->total_investment }};
+        let total_investment = +{{ $contract_kabol == null ?  $plan->kulLagat->total_investment : $contract_kabol->total_amount }};
         window.onload = function() {
             var date_fields = document.getElementsByClassName("nepali-date");
             for (let index = 0; index < date_fields.length; index++) {

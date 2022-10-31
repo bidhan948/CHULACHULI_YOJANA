@@ -30,27 +30,33 @@
                             <th scope="col">प्रकार छान्नुहोस्</th>
                             <th scope="col">ठेक्का कबोल गरेको कुल रकम </th>
                             <th scope="col">कुल रकम</th>
-                            <th scope="col">बैंक ग्यारेन्टी रकम</th>
-                            <th scope="col">धरौटी खातामा जम्मा गरिएको रकम</th>
+                            <th scope="col">कैफियत</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($contract_open as $key => $item)
                             <tr>
                                 <th scope="row">{{ $key + 1 }}</th>
-                                <td><input type="text" value="{{ $item->name }}" name="contractor_name[]"></td>
                                 <td>
-                                    <select class="form-select" name="has_vat[]" aria-label="Disabled select example">
-                                        <option selected>भ्याट प्रकार</option>
+                                    <input type="text" value="{{ $item->name }}" name="contractor_name[]">
+                                    <input type="hidden" value="{{ $item->list_registration_attribute_id }}"
+                                        name="list_registration_attribute_id[]">
+                                </td>
+                                <td>
+                                    <select class="form-select" id="has_vat_{{$key}}" name="has_vat[]" aria-label="Disabled select example"
+                                        onchange="chnagedHasVat({{ $key }})">
+                                        <option value="">भ्याट प्रकार</option>
                                         <option value="1">भ्याट सहित</option>
                                         <option value="2">भ्याट बाहेक</option>
                                     </select>
                                 </td>
-                                <td><input type="number" name="total_kabol_amount[]"></td>
-                                <td><input type="text" class="date" name="total_amount[]"></td>
-                                <td><input type="number" value="{{ $item->bail_amount }}" name="bank_guarantee_amount[]">
+                                <td><input type="number" id="kabol_amount_{{ $key }}"
+                                        name="total_kabol_amount[]" oninput="chnagedHasVat({{ $key }})"></td>
+                                <td><input type="text" id="total_amount_{{ $key }}" name="total_amount[]"
+                                        class="form-control form-control-sm" readonly></td>
+                                <td>
+                                    <textarea type="text" name="remark[]" class="form-control form-control-sm"></textarea>
                                 </td>
-                                <td><input type="text" name="bail_account_amount[]"></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -76,7 +82,35 @@
     <script src="{{ asset('vue/bundle.js') }}"></script>
     <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
     <script src="{{ asset('date-picker/js/nepali.datepicker.v3.7.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
+    <script>
+        window.onload = function() {
+            $('.date').nepaliDatePicker({
+                ndpYear: true,
+                ndpMonth: true,
+                ndpYearCount: 70,
+                readOnlyInput: true,
+                ndpTriggerButton: false,
+                ndpTriggerButtonText: '<i class="fa fa-calendar"></i>',
+                ndpTriggerButtonClass: 'btn btn-primary',
+            });
+        }
 
-    <script></script>
-
+        function chnagedHasVat(params) {
+            has_vat = $("#has_vat_"+params).val();
+            console.log(has_vat);
+            if (has_vat == '') {
+                alert("भ्याटको परकर छान्नुहोस्");
+                $("#kabol_amount_" + params).val(0);
+                $("#total_amount_" + params).val(0);
+            }else{
+                kabol_amount = $("#kabol_amount_" + params).val();
+                if (has_vat == 1) {
+                    $("#total_amount_" + params).val(kabol_amount);
+                } else {
+                    $("#total_amount_"+params).val(parseFloat(kabol_amount*1.13).toFixed(2));
+                }
+            }
+        }
+    </script>
 @endsection

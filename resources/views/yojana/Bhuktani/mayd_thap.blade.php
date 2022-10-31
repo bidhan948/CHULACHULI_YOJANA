@@ -70,7 +70,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td class="text-center">
-                                                                {{ __('म्याद थपको लागी उपभोक्ता समितिले निबेदन दिएको मिती  :') }}
+                                                                म्याद थपको लागी {{ session('type_id') != config('TYPE.CONTRACT_MARFAT') ?  config('TYPE.'.session('type_id')) : $contract_kabol->listRegistrationAttribute->listRegistration->name }}ले निबेदन दिएको मिती  :
                                                             </td>
                                                             <td class="">{{ Nepali($deadline->consumer_date_nep) }}
                                                             </td>
@@ -140,7 +140,8 @@
                                         <div class="input-group ">
                                             <div class="input-group-prepend">
                                                 <span
-                                                    class="input-group-text ">{{ __('म्याद थपको लागी उपभोक्ता समितिले निबेदन दिएको मिती :') }}
+                                                    class="input-group-text ">
+                                                    म्याद थपको लागी {{ session('type_id') != config('TYPE.CONTRACT_MARFAT') ?  config('TYPE.'.session('type_id')) : $contract_kabol->listRegistrationAttribute->listRegistration->name }}ले निबेदन दिएको मिती  :
                                                     <span class="text-danger px-1 font-weight-bold">*</span></span>
                                             </div>
                                             <input type="text"

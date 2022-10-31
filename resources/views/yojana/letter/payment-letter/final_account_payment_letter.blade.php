@@ -31,7 +31,8 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="letter_wrap">
-                    <form action="{{ route('plan.print.letter.final_account_payment_letter') }}" method="get" target="_blank">
+                    <form action="{{ route('plan.print.letter.final_account_payment_letter') }}" method="get"
+                        target="_blank">
                         <input name="plan_id" value="{{ $plan->id }}" type="hidden">
                         <div class="letter_inner">
                             <button id="print_btn" type="submit">
@@ -56,22 +57,27 @@
                             </div>
                             <div class="letter_subject">विषय:- अन्तिम भुक्तानी सम्बन्धमा ।</div>
                             <div class="letter_body">
-                                <p class="letter_greeting">श्री आर्थिक प्रशासन  शाखा,</p>
-                                <p>{{config('constant.SITE_NAME')}}, {{config('constant.FULL_ADDRESS')}}</p>
+                                <p class="letter_greeting">श्री आर्थिक प्रशासन शाखा,</p>
+                                <p>{{ config('constant.SITE_NAME') }}, {{ config('constant.FULL_ADDRESS') }}</p>
                                 <p class="letter_text">
                                     यस कार्यालयको स्वीकृत वार्षिक कार्यक्रम अनुसार मिति
                                     {{ Nepali($plan->otherBibaran->agreement_date_nep) }} मा यस कार्यलय र
-                                    {{ $type->typeable->name }} बिच संझौता भई यस {{ config('constant.SITE_TYPE') }}को वडा
+                                    {{ $contract_kabol == null ? $type->typeable->name : $contract_kabol->listRegistrationAttribute->name }}
+                                    बिच संझौता भई यस {{ config('constant.SITE_TYPE') }}को वडा
                                     नं {{ Nepali($plan->ward_no) }} मा {{ $plan->name }} योजना संचालनको कार्यदेश
                                     दिइएकोमा मिति
                                     {{ Nepali($add_deadline == null ? $plan->otherBibaran->end_date : $add_deadline->period_add_date_nep) }}
                                     मा तोकिएको काम सम्पन्न
-                                    गरी {{ config('TYPE.' . session('type_id')) }}को मिति
+                                    गरी
+                                    {{ $contract_kabol == null ? $type->typeable->name : $contract_kabol->listRegistrationAttribute->name }}
+                                    को मिति
                                     {{ Nepali($final_payment->type_accept_date) }} मा बैठक बसी आम्दानी खर्च
                                     अनुमोदन तथा सार्बजनिक गरी
                                     सार्बजनिक परिक्षण समेत गरेको र अनुगमन समितिको मिति
                                     {{ Nepali($final_payment->anugaman_accept_date) }} मा बैठक बसी योजनाको अन्तिम
-                                    भुक्तानीको लागि सिफारिस गरेको र {{ config('TYPE.' . session('type_id')) }}ले योजनाको
+                                    भुक्तानीको लागि सिफारिस गरेको र
+                                    {{ $contract_kabol == null ? $type->typeable->name : $contract_kabol->listRegistrationAttribute->name }}
+                                    ले योजनाको
                                     बिल
                                     भरपाई प्राबिधिक मुल्यांकन
                                     तथा योजनाको फोटोसहित यस {{ config('constant.SITE_TYPE') }}मा पेश गरी उक्त योजनाको
@@ -86,10 +92,6 @@
                                                 </td>
                                                 <td>{{ $plan->detail }}</td>
                                             </tr>
-
-                                            
-                                        
-                                                    
                                             <tr>
                                                 <td class="text-right" style="width: 55%;">योजनाको कुल अनुदान रकम :
                                                 </td>
@@ -97,28 +99,26 @@
                                             </tr>
                                             <tr>
                                                 <td class="text-right">योजनाको कुल लागत अनुमान :</td>
-                                                <td>{{ 'रु ' . NepaliAmount($plan->kulLagat->total_investment) }}</td>
+                                                <td>{{ 'रु ' . NepaliAmount($contract_kabol == null ? $plan->kulLagat->total_investment : $contract_kabol->total_amount) }}
+                                                </td>
                                             </tr>
-                                                                                        <tr>
+                                            <tr>
                                                 <td class='text-right'>बजेट शिर्षक:</td>
-                                                @foreach($plan->budgetSourcePlanDetails as $key => $value)
+                                                @foreach ($plan->budgetSourcePlanDetails as $key => $value)
+                                                    <td>{{ $value->budgetSources->name }}</td>
                                                 @endforeach
-                                                <td>{{$value->budgetSources->name}}</td>
                                             </tr>
-                                            
+
                                             <tr>
                                                 <td class='text-right'>विनियोजन किसिम</td>
-                                                <td>{{$plan->planAllocation->name}}</td>
+                                                <td>{{ $plan->planAllocation->name }}</td>
                                             </tr>
-                                            <tr>
-                                                <td class='text-right'>कार्यदेश दिएको रकम</td>
-                                                <td>{{NepaliAmount($plan->kulLagat->work_order_budget)}}</td>
-                                            </tr>
-                                            
-                                            <tr>
-                                                <td class="text-right">योजनाको काम सम्पन्न भएको मिति :</td>
-                                                <td>{{ Nepali($final_payment->plan_end_date) }}</td>
-                                            </tr>
+                                            @if ($contract_kabol == null)
+                                                <tr>
+                                                    <td class='text-right'>कार्यदेश दिएको रकम</td>
+                                                    <td>{{ NepaliAmount($plan->kulLagat->work_order_budget) }}</td>
+                                                </tr>
+                                            @endif
                                             <tr>
                                                 <td class="text-right">भुक्तानी दिनु पर्ने कुल रकम :</td>
                                                 <td>{{ NepaliAmount($final_payment->total_bhuktani_amount) }}</td>
@@ -169,45 +169,46 @@
                                                 <td>{{ 'रु ' . NepaliAmount($final_payment->final_total_paid_amount) }}
                                                 </td>
                                             </tr>
-                                                                                                        <tr>
-                                            	<td class="text-right">बैंकको नाम</td>
-                                            	<td>
+                                            <tr>
+                                                <td class="text-right">बैंकको नाम</td>
+                                                <td>
                                                     <select name="bank_id">
                                                         <option value="">-- छानुहोस --</option>
                                                         @foreach ($bank as $data)
-                                                            <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                            <option value="{{ $data->id }}">{{ $data->name }}
+                                                            </option>
                                                         @endforeach
-                                                    </select>   
-                                            	</td>
-                                            	</tr>
-                                            	
-                                                <tr>
-                                            	<td class="text-right">खाता नं.</td>
-                                            	<td>
-                                                    <input name='acc_no'>
-                                            	</td>
-                                            </tr>                             
-                                     
-                                                                                        
-                                           <tr>
-                                            	<td class="text-right">भुक्तानी लिनेको नाम</td>
-                                            	<td>
-                                                    <input  style="width:100%" name='bhuktani_name'>
-                                            	</td>
+                                                    </select>
+                                                </td>
                                             </tr>
-                                            
-                                            
+
+                                            <tr>
+                                                <td class="text-right">खाता नं.</td>
+                                                <td>
+                                                    <input name='acc_no'>
+                                                </td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td class="text-right">भुक्तानी लिनेको नाम</td>
+                                                <td>
+                                                    <input style="width:100%" name='bhuktani_name'>
+                                                </td>
+                                            </tr>
+
+
 
                                         </thead>
                                     </table>
                                 </table>
                             </div>
-                            
+
                             <div class='row'>
                                 <div class='col-md-4'>
                                 </div>
                             </div>
-                            
+
                             <div class="letter_footer">
                                 <!-- Sign Item  -->
                                 <div class="letter_sign">
@@ -253,11 +254,11 @@
     <!-- /.container-fluid -->
 @endsection
 @section('scripts')
-<script src="{{ asset('date-picker/js/nepali.datepicker.v3.7.min.js') }}"></script>
+    <script src="{{ asset('date-picker/js/nepali.datepicker.v3.7.min.js') }}"></script>
     <script src="{{ asset('plugins/select2/js/select2.min.js') }}"></script>
     <script>
         window.onload = function() {
-          $('#date').nepaliDatePicker({
+            $('#date').nepaliDatePicker({
                 ndpYear: true,
                 ndpMonth: true,
                 ndpYearCount: 70,

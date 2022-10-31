@@ -108,14 +108,14 @@
                         </li>
                     </ul>
                 </li>
-                    <!--<li class="nav-item">-->
-                    <!--   <a href="{{ route('setting.list') }}" class="nav-link @yield('setting_yojana')">-->
-                    <!--       <i class="fa-solid fa-gears nav-icon"></i>-->
-                    <!--       <p>-->
-                    <!--           {{ __('मास्टर सेटिङ') }}-->
-                    <!--       </p>-->
-                    <!-- </a> -->
-                    <!--</li>-->
+                   <li class="nav-item">
+                      <a href="{{ route('setting.list') }}" class="nav-link @yield('setting_yojana')">-->
+                          <i class="fa-solid fa-gears nav-icon"></i>-->
+                          <p>
+                    {{ __('मास्टर सेटिङ') }}-->
+                        </p>-->
+                     </a> -->
+                    </li>
                 @if(!auth()->user()->ward_no)
                     <li class="nav-item @yield('bhuktani_setting')">
                         <a href="#" class="nav-link">
@@ -151,6 +151,12 @@
                                 <p>{{ __('सुची दर्ता') }}</p>
                             </a>
                         </li> --}}
+                        <li class="nav-item ml-1">
+                            <a href="{{ route('plan.setting.excel') }}" class="nav-link @yield('setting_excel_upload')">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>{{ __('EXCEL UPLOAD') }}</p>
+                            </a>
+                        </li>
                         <li class="nav-item ml-1">
                             <a href="{{ route('setting.merge_index') }}" class="nav-link @yield('setting_merge')">
                                 <i class="far fa-circle nav-icon"></i>
