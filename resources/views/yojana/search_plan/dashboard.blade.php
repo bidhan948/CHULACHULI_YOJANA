@@ -13,9 +13,17 @@
                         <h3 class="card-title">{{ __('योजना संचालन प्रक्रिया') }}</h3>
                     </div>
                     <div class="col-6 text-right">
-                        <a href="{{ route('plan-operate.index') }}" class="btn btn-sm btn-primary"><i
+                        <a onclick="event.preventDefault(); document.getElementById('form').submit();"
+                            class="btn btn-sm btn-primary"><i
                                 class="fa-solid fa-backward px-1"></i>{{ __('पछी जानुहोस्') }}</a>
+                        <form id="form" action="{{ route('plan-operate.searchSubmit') }}" method="POST"
+                            class="d-none">
+                            @csrf
+                            <input type="hidden" name="type_id" value="{{ session('type_id') }}">
+                            <input type="hidden" name="reg_no" value="{{ $reg_no }}">
+                        </form>
                     </div>
+                    {{-- href="{{ route('plan-operate.index') }}" --}}
                     <div class="col-12 mt-2">
                         <p class="mb-0 p-2 text-center bg-primary">{{ $plan->name }}</p>
                     </div>
@@ -119,8 +127,8 @@
                             <ul class="users-list clearfix">
                                 <li class="card shadow-lg" style="width:100%;">
                                     <div class="d-flex justify-content-center">
-                                        <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image" class="img-fluid"
-                                            width="50">
+                                        <img src="{{ asset('yojana/report-icon.png') }}" alt="User Image"
+                                            class="img-fluid" width="50">
                                     </div>
                                     <a class="users-list-name mt-3 font-weight-bold"
                                         href="{{ route('plan.other_bibaran', $reg_no) }}">{{ __('योजना सम्बन्धि अन्य विवरण ') }}</a>

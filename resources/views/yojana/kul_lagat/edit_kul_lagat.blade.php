@@ -13,8 +13,17 @@
                         <h3 class="card-title">{{ __('कुल लागत') }}</h3>
                     </div>
                     <div class="col-6 text-right">
-                        <a href="{{ route('plan-operate.index') }}" class="btn btn-sm btn-primary"><i
-                                class="fa-solid fa-backward px-1"></i>{{ __('पछी जानुहोस्') }}</a>
+                        <div class="col-6 text-right">
+                            <a onclick="event.preventDefault(); document.getElementById('form').submit();"
+                                class="btn btn-sm btn-primary"><i
+                                    class="fa-solid fa-backward px-1"></i>{{ __('पछी जानुहोस्') }}</a>
+                            <form id="form" action="{{ route('plan-operate.searchSubmit') }}" method="POST"
+                                class="d-none">
+                                @csrf
+                                <input type="hidden" name="type_id" value="{{ session('type_id') }}">
+                                <input type="hidden" name="reg_no" value="{{ $plan->reg_no }}">
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -23,7 +32,7 @@
                 <div class="row">
                     <div class="col-12">
                         <p class="mb-0 bg-primary text-center">{{ __('योजना दर्ता नं : ') }} {{ Nepali($regNo) }}</p>
-                        <form method="POST" action="{{ route('kul_lagat.update',$kul_lagat) }}">
+                        <form method="POST" action="{{ route('kul_lagat.update', $kul_lagat) }}">
                             @csrf
                             @method('PUT')
                             <div class="row">
@@ -38,7 +47,7 @@
                                             </div>
                                             <input type="text"
                                                 class="form-control amount @error('quantity') is-invalid @enderror"
-                                                name="quantity" id="quantity" value="{{$kul_lagat->quantity}}">
+                                                name="quantity" id="quantity" value="{{ $kul_lagat->quantity }}">
                                             @error('quantity')
                                                 <p class="invalid-feedback" style="font-size: 0.9rem">
                                                     {{ __('भौतिक परिमाणको नाम अनिवार्य छ') }}
@@ -54,10 +63,13 @@
                                                 <span class="input-group-text ">{{ __('भौतिक इकाई :') }}
                                                     <span class="text-danger px-1 font-weight-bold">*</span></span>
                                             </div>
-                                            <select name="unit_id" id="unit_id" class="form-control @error('quantity') is-invalid @enderror">
-                                                <option value="">{{__('--छान्नुहोस्--')}}</option>
+                                            <select name="unit_id" id="unit_id"
+                                                class="form-control @error('quantity') is-invalid @enderror">
+                                                <option value="">{{ __('--छान्नुहोस्--') }}</option>
                                                 @foreach ($units as $key => $unit)
-                                                    <option value="{{$unit->id}}" {{$unit->id == $kul_lagat->unit_id ? 'selected':''}}>{{$unit->name}}</option>
+                                                    <option value="{{ $unit->id }}"
+                                                        {{ $unit->id == $kul_lagat->unit_id ? 'selected' : '' }}>
+                                                        {{ $unit->name }}</option>
                                                 @endforeach
                                             </select>
                                             @error('unit_id')
@@ -120,8 +132,7 @@
                                     <div class="form-group mt-2">
                                         <div class="input-group ">
                                             <div class="input-group-prepend">
-                                                <span
-                                                    class="input-group-text ">{{ __('अन्य निकायबाट प्राप्त अनुदान :') }}
+                                                <span class="input-group-text ">{{ __('अन्य निकायबाट प्राप्त अनुदान :') }}
                                                     <span class="text-danger px-1 font-weight-bold">*</span></span>
                                             </div>
                                             <input type="text"
@@ -161,7 +172,7 @@
                                             <input type="text"
                                                 class="form-control amount @error('other_office_con_contingency_check') is-invalid @enderror"
                                                 name="other_office_con_contingency"
-                                                value="{{ $kul_lagat->other_office_con_contingency == null? $contingency->percent: $kul_lagat->other_office_con_contingency }}"
+                                                value="{{ $kul_lagat->other_office_con_contingency == null ? $contingency->percent : $kul_lagat->other_office_con_contingency }}"
                                                 id="other_office_con_contingency" onkeyup="calculateAnyaNikaya(event)">
                                         </div>
                                     </div>
@@ -227,7 +238,7 @@
                                             </div>
                                             <input type="text" class="form-control amount"
                                                 name="other_agreement_contingency"
-                                                value="{{ $kul_lagat->other_agreement_contingency == null? $contingency->percent: $kul_lagat->other_agreement_contingency }}"
+                                                value="{{ $kul_lagat->other_agreement_contingency == null ? $contingency->percent : $kul_lagat->other_agreement_contingency }}"
                                                 id="other_agreement_contingency" onkeyup="calculateAnyaSajhedari(event)">
                                         </div>
                                     </div>
@@ -252,7 +263,8 @@
                                     <div class="form-group mt-2">
                                         <div class="input-group ">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text ">{{ config('TYPE.'.session('type_id')) .__('बाट नगद साझेदारी :') }}
+                                                <span
+                                                    class="input-group-text ">{{ config('TYPE.' . session('type_id')) . __('बाट नगद साझेदारी :') }}
                                                     <span class="text-danger px-1 font-weight-bold">*</span></span>
                                             </div>
                                             <input type="text"
@@ -262,7 +274,7 @@
                                                 id="customer_agreement">
                                             @error('customer_agreement')
                                                 <p class="invalid-feedback" style="font-size: 0.9rem">
-                                                    {{ config('TYPE.'.session('type_id')) .__('बाट नगद साझेदारी अनिवार्य छ') }}
+                                                    {{ config('TYPE.' . session('type_id')) . __('बाट नगद साझेदारी अनिवार्य छ') }}
                                                 </p>
                                             @enderror
                                         </div>
@@ -315,7 +327,8 @@
                                     <div class="form-group mt-2">
                                         <div class="input-group ">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text ">{{ config('TYPE.'.session('type_id')) .__('बाट जनश्रमदान :') }}
+                                                <span
+                                                    class="input-group-text ">{{ config('TYPE.' . session('type_id')) . __('बाट जनश्रमदान :') }}
                                                     <span class="text-danger px-1 font-weight-bold">*</span></span>
                                             </div>
                                             <input type="text"
@@ -323,7 +336,7 @@
                                                 name="consumer_budget" id="consumer_budget"
                                                 value="{{ $kul_lagat->consumer_budget }}" required>
                                             @error('consumer_budget')
-                                                {{ config('TYPE.'.session('type_id')) .__('बाट जनश्रमदान खाली छ') }}
+                                                {{ config('TYPE.' . session('type_id')) . __('बाट जनश्रमदान खाली छ') }}
                                             @enderror
                                         </div>
                                     </div>
@@ -345,8 +358,8 @@
                             </div>
                             @if ($show_form)
                                 <button type="submit" class="btn btn-sm btn-primary"
-                                onclick="return confirm('के तपाई निश्चित हुनुहुन्छ ?')">{{ __('सेभ गर्नुहोस्') }}</button>
-                            @endif 
+                                    onclick="return confirm('के तपाई निश्चित हुनुहुन्छ ?')">{{ __('सेभ गर्नुहोस्') }}</button>
+                            @endif
                         </form>
                     </div>
                 </div>

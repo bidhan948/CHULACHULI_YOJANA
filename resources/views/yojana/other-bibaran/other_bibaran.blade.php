@@ -21,8 +21,17 @@
                         <h3 class="card-title">{{ __('अन्य विवरण') }}</h3>
                     </div>
                     <div class="col-6 text-right">
-                        <a href="{{ route('plan-operate.index') }}" class="btn btn-sm btn-primary"><i
+                    <div class="col-6 text-right">
+                        <a onclick="event.preventDefault(); document.getElementById('form').submit();"
+                            class="btn btn-sm btn-primary"><i
                                 class="fa-solid fa-backward px-1"></i>{{ __('पछी जानुहोस्') }}</a>
+                        <form id="form" action="{{ route('plan-operate.searchSubmit') }}" method="POST"
+                            class="d-none">
+                            @csrf
+                            <input type="hidden" name="type_id" value="{{ session('type_id') }}">
+                            <input type="hidden" name="reg_no" value="{{ $plan->reg_no }}">
+                        </form>
+                    </div>
                     </div>
                 </div>
             </div>

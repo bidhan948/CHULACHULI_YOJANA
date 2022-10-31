@@ -13,8 +13,15 @@
                         <h3 class="card-title">{{ __('कुल लागत') }}</h3>
                     </div>
                     <div class="col-6 text-right">
-                        <a href="{{ route('plan-operate.index') }}" class="btn btn-sm btn-primary"><i
+                        <a onclick="event.preventDefault(); document.getElementById('form').submit();"
+                            class="btn btn-sm btn-primary"><i
                                 class="fa-solid fa-backward px-1"></i>{{ __('पछी जानुहोस्') }}</a>
+                        <form id="form" action="{{ route('plan-operate.searchSubmit') }}" method="POST"
+                            class="d-none">
+                            @csrf
+                            <input type="hidden" name="type_id" value="{{ session('type_id') }}">
+                            <input type="hidden" name="reg_no" value="{{ $plan->reg_no }}">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -53,10 +60,11 @@
                                                 <span class="input-group-text ">{{ __('भौतिक इकाई :') }}
                                                     <span class="text-danger px-1 font-weight-bold">*</span></span>
                                             </div>
-                                            <select name="unit_id" id="unit_id" class="form-control @error('quantity') is-invalid @enderror">
-                                                <option value="">{{__('--छान्नुहोस्--')}}</option>
+                                            <select name="unit_id" id="unit_id"
+                                                class="form-control @error('quantity') is-invalid @enderror">
+                                                <option value="">{{ __('--छान्नुहोस्--') }}</option>
                                                 @foreach ($units as $key => $unit)
-                                                    <option value="{{$unit->id}}">{{$unit->name}}</option>
+                                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
                                                 @endforeach
                                             </select>
                                             @error('unit_id')
