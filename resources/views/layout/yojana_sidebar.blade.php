@@ -108,14 +108,14 @@
                         </li>
                     </ul>
                 </li>
-                    <!--<li class="nav-item">-->
-                    <!--   <a href="{{ route('setting.list') }}" class="nav-link @yield('setting_yojana')">-->
-                    <!--       <i class="fa-solid fa-gears nav-icon"></i>-->
-                    <!--       <p>-->
-                    <!--           {{ __('मास्टर सेटिङ') }}-->
-                    <!--       </p>-->
-                    <!-- </a> -->
-                    <!--</li>-->
+                   <li class="nav-item">
+                      <a href="{{ route('setting.list') }}" class="nav-link @yield('setting_yojana')">-->
+                          <i class="fa-solid fa-gears nav-icon"></i>-->
+                          <p>
+                    {{ __('मास्टर सेटिङ') }}-->
+                        </p>-->
+                     </a> -->
+                    </li>
                 @if(!auth()->user()->ward_no)
                     <li class="nav-item @yield('bhuktani_setting')">
                         <a href="#" class="nav-link">

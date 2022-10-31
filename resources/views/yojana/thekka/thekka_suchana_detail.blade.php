@@ -17,7 +17,7 @@
     <div class="container-fluid">
         <div class="card ">
             <div class="card-header">
-                <h3>ठेक्का सुचना विवरण</h3>
+                <h4>ठेक्का सुचना विवरण</h4>
             </div>
 
 
@@ -26,7 +26,16 @@
                 <input type="hidden" name="plan_id" value={{$plan->id}}>
                 <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">सूचना प्रकासित मिति:
+                                    <span id="budget_source_id_group" class="text-danger font-weight-bold px-1">*</span></span>
+                            </div>
+                            <input name="prakashit_date" value="{{isset($contract->prakashit_date) ? $contract->prakashit_date : ''}}" type="text" class="form-control form-control-sm date"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">ठेक्का किसिम :
@@ -35,17 +44,17 @@
 
                             @if ($contract!=null)
                                 <div class="form-check ml-4">
-                                    <input class="form-check-input" type="radio" name="has_deadline"
-                                        id="has_deadline" value="1" {{$contract->has_deadline? 'checked' : ''}}>
-                                    <label class="form-check-label" for="has_deadline">
+                                    <input class="form-check-input" id="withVat" type="radio" name="has_deadline"
+                                        id="has_deadline" value="1" onclick="calculateAmount()" {{$contract->has_deadline? 'checked' : ''}}>
+                                    <label class="form-check-label" for="withVat">
                                         भ्याट सहित
                                     </label>
                                 </div>
                                 <div class="form-check">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="has_deadline"
-                                            id="no_deadline" value="0" {{!$contract->has_deadline ? 'checked' : ''}}>
-                                        <label class="form-check-label" for="no_deadline">
+                                        <input class="form-check-input" id="withoutVat" type="radio" name="has_deadline"
+                                            id="no_deadline" value="0" onclick="calculateAmount()" {{!$contract->has_deadline ? 'checked' : ''}}>
+                                        <label class="form-check-label" for="withoutVat">
                                             भ्याट बाहेक
                                         </label>
                                     </div>
@@ -53,17 +62,17 @@
                             @else
 
                             <div class="form-check ml-4">
-                                <input class="form-check-input" type="radio" name="has_deadline"
-                                    id="has_deadline" value="1">
-                                <label class="form-check-label" for="has_deadline">
+                                <input class="form-check-input" id="withVat" type="radio" name="has_deadline"
+                                    id="has_deadline" value="1" onclick="calculateAmount()">
+                                <label class="form-check-label" for="withVat">
                                     भ्याट सहित
                                 </label>
                             </div>
                             <div class="form-check">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="has_deadline"
-                                        id="no_deadline" value="0" checked>
-                                    <label class="form-check-label" for="no_deadline">
+                                    <input class="form-check-input" id="withoutVat" type="radio" name="has_deadline"
+                                        id="no_deadline" value="0" onclick="calculateAmount()" checked>
+                                    <label class="form-check-label" for="withoutVat">
                                         भ्याट बाहेक
                                     </label>
                                 </div>
@@ -76,38 +85,28 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">ठेक्का रकम:
                                     <span id="budget_source_id_group" class="text-danger font-weight-bold px-1">*</span></span>
                             </div>
-                            <input name="thekka_amount" value="{{isset($contract->thekka_amount) ? $contract->thekka_amount : ''}}" type="number" class="form-control form-control-sm"></textarea>
+                            <input name="thekka_amount" id="thekka_amount" oninput="calculateAmount()" value="{{isset($contract->thekka_amount) ? $contract->thekka_amount : ''}}" type="number" class="form-control form-control-sm">
                         </div>
                     </div>
-
-                    <div class="col-md-4">
-                        <div class="input-group input-group-sm">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">प्रकासित मिति:
-                                    <span id="budget_source_id_group" class="text-danger font-weight-bold px-1">*</span></span>
-                            </div>
-                            <input name="prakashit_date" value="{{isset($contract->prakashit_date) ? $contract->prakashit_date : ''}}" type="text" class="form-control form-control-sm date"></textarea>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
+                     <div class="col-md-6">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">कुल ठेक्का रकम:
                                     <span id="budget_source_id_group" class="text-danger font-weight-bold px-1">*</span></span>
                             </div>
-                            <input name="total_thekka_amount" value="{{isset($contract->total_thekka_amount) ? $contract->total_thekka_amount : ''}}" type="number" class="form-control form-control-sm"></textarea>
+                            <input name="total_thekka_amount" id="total_thekka_amount" value="{{isset($contract->total_thekka_amount) ? $contract->total_thekka_amount : ''}}" type="number" class="form-control form-control-sm" readonly>
                         </div>
                     </div>
+                </div>
+
+                <div class="row mt-3">
+                   
 
                     <div class="col-md-6">
                         <div class="input-group input-group-sm">
@@ -118,17 +117,12 @@
                             <input name="dakhila_date" value="{{isset($contract->dakhila_date) ? $contract->dakhila_date : ''}}" type="text" class="form-control form-control-sm date"></textarea>
                         </div>
                     </div>
-
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mt-2">
+                    <div class="col-md-6">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
-                                <span class="input-group-text">कैफियत:
-                                    <span id="budget_source_id_group" class="text-danger font-weight-bold px-1">*</span></span>
+                                <span class="input-group-text">कैफियत:</span>
                             </div>
-                            <textarea name="remarks" value="" type="text" class="form-control form-control-sm">{{isset($contract->remarks) ? $contract->remarks : ''}}</textarea>
+                            <textarea name="remarks" value="" type="text" class="form-control form-control-sm" style="height:31px">{{isset($contract->remarks) ? $contract->remarks : ''}}</textarea>
                         </div>
                     </div>
                 </div>
@@ -160,7 +154,17 @@
                         ndpTriggerButtonClass: 'btn btn-primary',
                     });
                     }
-
+            function calculateAmount()
+            {
+                thekka_amount = +$("#thekka_amount").val() || 0;
+                withVat = $('#withVat').is(':checked');
+                withoutVat = $('#withoutVat').is(':checked');
+                if(withVat){
+                    $("#total_thekka_amount").val((thekka_amount).toFixed(2));
+                }else{
+                    $("#total_thekka_amount").val((1.13*thekka_amount).toFixed(2));
+                }
+            }
     </script>
     
 @endsection
