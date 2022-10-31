@@ -95,7 +95,7 @@ Route::group(['middleware' => 'auth'], function () {
         // program ROUTES
         Route::get('program-operate', [SamitiGathanController::class, 'programOperateDashboard'])->name('program-operate.index');
         Route::get('program/final-bhuktani/{reg_no}', [ProgramFinalPaymentController::class, 'index'])->name('program.final_bhuktani');
-        Route::post('program/final-bhuktani', [ProgramFinalPaymentController::class, 'store'])->name('program.final_bhuktani.store');
+        Route::post('program/final-bhuktani', [ProgramFinalPaymentController::class, 'store'])->name('program.final_bhuktani_store');
         Route::get('work-order/{reg_no}', [WorkOrderBudgetController::class, 'index'])->name('work_order.index');
         Route::get('work-order/kul-lagat/{reg_no}', [ProgramKulLagatController::class, 'index'])->name('work_order.kul_lagat');
         Route::post('work-order/kul-lagat/create', [ProgramKulLagatController::class, 'create'])->name('work_order.create');

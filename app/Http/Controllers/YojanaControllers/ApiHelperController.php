@@ -13,6 +13,7 @@ use App\Models\YojanaModel\kul_lagat;
 use App\Models\YojanaModel\plan;
 use App\Models\YojanaModel\program\program_add_deadline;
 use App\Models\YojanaModel\program\program_advance;
+use App\Models\YojanaModel\program\program_final_payment;
 use App\Models\YojanaModel\program\work_order;
 use App\Models\YojanaModel\running_bill_payment;
 use App\Models\YojanaModel\setting\anugaman_samiti;
@@ -354,21 +355,65 @@ class ApiHelperController extends Controller
 
     public function getProgramAntimBhuktani()
     {
+        $temp = 0;
+
         $data['work_order'] = work_order::query()
             ->where('id', request('work_order_id'))
             ->with('Program', 'listRegistrationAttribute')
             ->first();
 
+        $program_advance = program_advance::query()
+            ->where('work_order_id', request('work_order_id'))
+            ->first();
+
+        $data['program_final_payment_sum'] = program_final_payment::query()
+            ->where('work_order_id', request('work_order_id'))
+            ->sum('bill_amount');
+
+        $data['program_advance_amount'] = $program_advance == null ? 0 : ($data['program_final_payment_sum'] ? 0 : $data['program_final_payment_sum']);
+
+        $latest_program_final_payment = program_final_payment::query()
+            ->where('work_order_id', request('work_order_id'))
+            ->latest()
+            ->first();
+
+        if (($data['work_order']->cost_participation - $data['program_final_payment_sum']) < 0) {
+            $cost_participation = 0;
+            $temp = $data['program_final_payment_sum'] - $data['work_order']->cost_participation;
+        } else {
+            $cost_participation = $data['work_order']->cost_participation - $data['program_final_payment_sum'];
+            $temp = 0;
+        }
+
+        if (($data['work_order']->cost_sharing - $temp) < 0) {
+            $cost_sharing = 0;
+            $temp = $temp - $data['work_order']->cost_sharing;
+        } else {
+            $cost_sharing = $data['work_order']->cost_sharing - $temp;
+            $temp = 0;
+        }
+
+        if (($data['work_order']->municipality_amount - $temp) < 0) {
+            $municipality_amount = 0;
+            $temp = $temp - $data['work_order']->municipality_amount;
+        } else {
+            $municipality_amount = $data['work_order']->municipality_amount - $temp;
+        }
+
+        $data['show_form'] = $latest_program_final_payment == null ? false : ($latest_program_final_payment->is_final_payment ? true : false);
+        $data['work_order_budget'] = ($data['work_order']->work_order_budget - $data['program_final_payment_sum']);
+
         $html = "";
         $html .= '<tr>';
-        $html .= '<td class="text-center"> रु . ' . Nepali($data['work_order']->municipality_amount) . '</td>';
-        $html .= '<td class="text-center"> रु . ' . Nepali($data['work_order']->cost_sharing) . '</td>';
-        $html .= '<td class="text-center"> रु . ' . Nepali($data['work_order']->cost_participation) . '</td>';
+        $html .= '<td class="text-center"> रु . ' . Nepali($municipality_amount) . '</td>';
+        $html .= '<td class="text-center"> रु . ' . Nepali($cost_sharing) . '</td>';
+        $html .= '<td class="text-center"> रु . ' . Nepali($cost_participation) . '</td>';
         $html .= '</tr>';
 
         $data['html'] = $html;
         return response()->json($data);
     }
+
 
     public function getBudgetRowTr(YojanaHelper $helper)
     {

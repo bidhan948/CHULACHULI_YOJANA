@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\YojanaControllers\program;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\YojanaRequest\ProgramFinalPaymentRequest;
+use App\Http\Requests\YojanaRequest\FinalPaymentRequest;
 use App\Models\YojanaModel\plan;
 use App\Models\YojanaModel\program\program_final_payment;
 use App\Models\YojanaModel\program\program_payment_final_deduction;
@@ -35,7 +35,7 @@ class ProgramFinalPaymentController extends Controller
         ]);
     }
 
-    public function store(ProgramFinalPaymentRequest $request)
+    public function store(FinalPaymentRequest $request)
     {
         $deduction = [];
         DB::beginTransaction();

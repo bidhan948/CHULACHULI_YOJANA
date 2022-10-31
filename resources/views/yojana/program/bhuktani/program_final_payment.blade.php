@@ -334,7 +334,7 @@
             });
 
             $("#bill_amount").on("input", function() {
-                var bill_amount = +$("#bill_amount").val();
+                var bill_amount = +$("#bill_amount").val() || 0;
                 var work_order_id = $("#work_order_id").val();
                 var ghati_katti_rakam = BHUKTANI_DINU_PARNE_RAKAM - bill_amount;
                 if (ghati_katti_rakam < 0) {
