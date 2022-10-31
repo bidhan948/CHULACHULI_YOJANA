@@ -40,7 +40,7 @@ class ThekkaController extends Controller
 
     public function thekkaSuchanaDetailSubmit(ContractRequest $request)
     {
-        $contract = contract::query()->where('plan_id', $request->plan_id)->first();
+        $contract = contract::query()->where('plan_id', $request->plan_id)->with('plan')->first();
 
         if ($contract == null) {
             contract::create($request->except('_token'));
@@ -49,12 +49,14 @@ class ThekkaController extends Controller
             $contract->update($request->except('_token'));
             toast("ठेक्का सुचना विवरण सच्याउन सफल भयो", 'success');
         }
-        return redirect()->back();
+        return redirect()->route('thekka-open', ['reg_no' => $contract->plan->reg_no]);    
+        
     }
 
     public function thekkaOpenForm($reg_no)
     {
         $plan = plan::query()->where('reg_no', $reg_no)->with('contractOpens')->first();
+        // dd(list_registration::query()->where('name', 'निर्माण व्यवसाय')->with('listRegistrationAttribute.listRegistrationAttributeDetails')->first());
 
         if (count($plan->contractOpens) != 0) {
             return view('yojana.thekka.edit_thekka_open_form', ['plan' => $plan, 'list_registrations' => list_registration::query()->where('name', 'निर्माण व्यवसाय')->with('listRegistrationAttribute.listRegistrationAttributeDetails')->first()]);
@@ -64,10 +66,10 @@ class ThekkaController extends Controller
 
     public function thekkaOpenSubmit(ThekkaOpenRequest $request)
     {
-        contractOpen::query()->where('plan_id', $request->plan_id)->delete();
+        $contractOpen=contractOpen::query()->where('plan_id', $request->plan_id)->with('plan')->delete();
 
         foreach ($request->name as $key => $value) {
-            contractOpen::create([
+            $contractOpen=contractOpen::create([
                 'plan_id' => $request->plan_id,
                 'name' => $request->name[$key],
                 'bank_name' => $request->bank_name[$key],
@@ -79,7 +81,7 @@ class ThekkaController extends Controller
             ]);
         }
         toast("ठेक्का सुचना विवरण हाल्न सफल भयो", 'success');
-        return redirect()->back();
+        return redirect()->route('thekka-kabol', ['reg_no' => $contractOpen->plan->reg_no]);    
         // contractOpen::create($re)
     }
 
